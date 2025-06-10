@@ -1,0 +1,65 @@
+#  Archivos ignorados para el front-end
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Archivos ignorados para el backend
+
+# Entornos virtuales
+.venv/
+venv/
+ENV/
+env/
+
+# Archivos de entorno
+.env
+.env.*
+
+# Bytecode de Python
+__pycache__/
+*.py[cod]
+*.so
+
+# Archivos de distribución
+*.egg-info/
+dist/
+build/
+
+# SQLite u otros archivos de DB locales
+*.sqlite3
+*.db
+
+# Archivos de logs y backups
+*.log
+*.bak
+*.orig
+
+# Alembic: ignora las migraciones si no quieres versionarlas todas
+alembic/versions/
+
+# Archivos de editor
+.vscode/
+.idea/
+.DS_Store
