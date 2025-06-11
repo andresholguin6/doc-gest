@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query
 from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
-from sqlalchemy.orm import joinedload
+from sqlalchemy import func
+from sqlalchemy.orm import joinedload, selectinload
 from typing import List
 import os
 import shutil
@@ -19,6 +20,7 @@ from app.db.database import get_db
 
 router = APIRouter()
 
+#Crear un documento
 @router.post("/", response_model=DocumentoRead)
 def crear_documento_con_archivo(
     titulo: str = Form(...),
@@ -67,12 +69,13 @@ def crear_documento_con_archivo(
 def obtener_documentos(request: Request, db: Session = Depends(get_db)):
     documentos = db.query(Documento).all()
     
+    #arreglo que devuelve los documentos con la ruta publica
     documentos_read = []
     for d in documentos:
         doc = DocumentoRead.from_orm(d)
 
         if d.ruta_archivo:  # Asegura que no sea None
-            url_segura = quote(str(d.ruta_archivo))
+            url_segura = quote(str(d.ruta_archivo))#pasar la ruta donde se encuentra el archivo a una ruta publica para poder abrir el archivo en el navegador
             doc.ruta_archivo = f"{request.base_url}archivos/{url_segura}"
         else:
             doc.ruta_archivo = None
@@ -82,13 +85,20 @@ def obtener_documentos(request: Request, db: Session = Depends(get_db)):
     return documentos_read
 
 #Obtener un documento
-@router.get("/archivo/{documento_id}")
-def obtener_archivo(documento_id: int, db: Session = Depends(get_db)):
-    documento = db.query(Documento).filter(Documento.id == documento_id).first()
-    if not documento:
-        raise HTTPException(status_code=404, detail="Documento no encontrado")
 
-    if not documento.ruta_archivo or not os.path.isfile(documento.ruta_archivo):
-        raise HTTPException(status_code=404, detail="Archivo no encontrado")
+@router.get("/buscar", response_model=List[DocumentoRead])
+def buscar_documentos(
+    query: str = Query(..., description="Texto a buscar por nombre de archivo o categoría"),
+    db: Session = Depends(get_db)
+    
+):
+    query_like = f"%{query.lower()}%"
 
-    return FileResponse(documento.ruta_archivo, media_type='application/pdf')
+    documentos = (
+        db.query(Documento)
+        .options(selectinload(Documento.categoria))  # Carga la categoría si la necesitas en el schema
+        .filter(func.lower(Documento.titulo).like(query_like))
+        .all()
+    )
+
+    return documentos
