@@ -28,7 +28,7 @@ export const BarraBusqueda = () => {
     }
 
     return (
-        <div className="w-full max-w-2xl mx-auto">
+        <div className="w-150 mx-auto">
             <form onSubmit={manejarBusqueda} className="flex">
                 <input
                     type="text"
@@ -47,21 +47,23 @@ export const BarraBusqueda = () => {
             </form>
 
             {/* Resultados */}
-            <div className="mt-6 space-y-4">
+            <div className="absolute w-150 space-y-4">
                 {buscado && !cargando && resultados.length === 0 ? (
-                    <p className="text-gray-500 text-center">No se encontraron documentos.</p>
+                    <div className="p-4 rounded-md bg-white shadow">
+                        <p className="text-gray-500 text-center">No se encontraron documentos.</p>
+                    </div>
+
                 ) : (
-                    resultados.map((doc) => (
-                        <div key={doc.id} className="p-4 border rounded-md bg-white shadow">
-                            <h2 className="text-lg font-semibold">{doc.titulo}</h2>
-                            <p className="text-sm text-gray-600">{doc.contenido}</p>
-                            {doc.categoria && (
-                                <p className="text-xs text-gray-500 mt-2">
-                                    Categoría: {doc.categoria.nombre}
-                                </p>
-                            )}
-                        </div>
-                    ))
+                    <table className="table-auto w-full border border-gray-300 bg-white shadow rounded-md">
+                        <tbody>
+                            {resultados.map((doc) => (
+                                <tr key={doc.id} className="last:border-b-0 hover:bg-gray-100">
+                                    <td className="px-4 py-2 font-semibold text-gray-800">{doc.titulo}</td>
+                                    <td className="px-4 py-2 text-gray-600">{doc.contenido}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 )}
             </div>
         </div>
