@@ -11,12 +11,14 @@ export const Home = () => {
       <SideBar />
       <main className="flex-1 bg-gray-100 p-6 overflow-auto">
         <h1 className="text-2xl font-semibold mb-4">Bienvenido a tu gestor documental</h1>
-        <div className="flex justify-end gap-2 z-40">
-          <div className="self-start z-50">
+        <div className=" flex justify-between gap-2">
+          <div className="">
             <BarraBusqueda />
           </div>
-          <CrearCategoria />
-          <CargarDocumento />
+          <div className="flex gap-2">
+            <CrearCategoria />
+            <CargarDocumento />
+          </div>
         </div>
         <h1 className="text-2xl font-semibold mb-4">Categorías</h1>
         <Categorias />
