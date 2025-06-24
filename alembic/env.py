@@ -22,6 +22,9 @@ if config.config_file_name is not None:
 # Importa tus modelos y su metadata
 from app.models.CategoriaModel import Base
 from app.models.DocumentoModel import Base  # Asegúrate de que este import sea válido
+from app.models.UsuarioModel import Base  # Asegúrate de que este import sea válido
+
+
 target_metadata = Base.metadata
 
 def run_migrations_offline():
