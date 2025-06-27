@@ -22,7 +22,7 @@ export const SideBar = () => {
                     <li className="mb-4">
                         <button
                             onClick={handleLogout}
-                            className="hover:text-blue-300 text-left w-full"
+                            className="hover:text-blue-300 text-left w-full cursor-pointer"
                         >
                             Logout
                         </button>

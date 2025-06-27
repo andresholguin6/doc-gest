@@ -6,7 +6,7 @@ class UsuarioCreate(BaseModel):
     rol: str = "usuario"  # valor por defecto
     
     class Config:
-        orm_mode = True
+        from_attributes=True
         
 class UsuarioResponse(BaseModel):
     id: int
@@ -14,7 +14,7 @@ class UsuarioResponse(BaseModel):
     rol: str
 
     class Config:
-        orm_mode = True
+        from_attributes=True
         
 class UsuarioLogin(BaseModel):
     username: str
