@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export const SideBar = () => {
+export const SideBar = ({ setActiveTab, user }) => {
 
     const navigate = useNavigate();
 
@@ -17,8 +17,23 @@ export const SideBar = () => {
                         <a href="#" className="hover:text-blue-300">Inicio</a>
                     </li>
                     <li className="mb-4">
-                        <a href="#" className="hover:text-blue-300">Documentos</a>
-                    </li>
+                        <button
+                            onClick={() => setActiveTab("documentos")}
+                            className="hover:text-blue-300 text-left w-full cursor-pointer"
+                        >
+                            Documentos
+                        </button>
+                    </li >
+                    {user?.rol === "superadmin" && (
+                        <li className="mb-4">
+                            <button
+                                onClick={() => setActiveTab("adminUsuarios")}
+                                className="hover:text-blue-300 text-left w-full cursor-pointer"
+                            >
+                                Admin usuarios
+                            </button>
+                        </li>
+                    )}
                     <li className="mb-4">
                         <button
                             onClick={handleLogout}
