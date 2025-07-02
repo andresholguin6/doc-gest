@@ -63,7 +63,7 @@ export const BarraBusqueda = () => {
     }, []);
 
     return (
-        <div className="w-100 mx-auto">
+        <div className="w-100">
             <div className="flex">
                 <input
                     type="text"
