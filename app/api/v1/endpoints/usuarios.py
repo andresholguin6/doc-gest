@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, status, Depends
+from typing import List
 from sqlalchemy.orm import Session
 from app.schemas.UsuarioSchema import UsuarioCreate, UsuarioResponse, UsuarioLogin, Token
 from app.models.UsuarioModel import Usuario
@@ -53,3 +54,6 @@ def login(usuario: UsuarioLogin, db: Session = Depends(get_db)):
 
     return Token(access_token=token, token_type="bearer")
 
+@router.get("/", response_model=List[UsuarioResponse])
+def obtener_usuarios(db: Session = Depends(get_db)):
+    return db.query(Usuario).all()

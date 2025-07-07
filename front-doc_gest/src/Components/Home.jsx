@@ -25,8 +25,8 @@ export const Home = () => {
       case "documentos":
       default:
         return (
-          <>
-            <h1 className="text-2xl font-semibold mb-4">Bienvenido a tu gestor documental</h1>
+          <div className="p-6">
+            <h1 className="text-2xl font-semibold mb-6">Bienvenido a tu gestor documental</h1>
             <div className="flex justify-between gap-2">
               <BarraBusqueda />
               <div className="flex gap-2">
@@ -37,7 +37,7 @@ export const Home = () => {
             <h1 className="text-2xl font-semibold mb-4">Categorías</h1>
             <Categorias />
             {/* <DocumentsList /> */}
-          </>
+          </div>
         );
     }
   };
