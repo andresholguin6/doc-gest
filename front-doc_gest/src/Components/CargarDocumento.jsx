@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import { Upload } from "lucide-react";
 
 export const CargarDocumento = () => {
   const [showModal, setShowModal] = useState(false);
@@ -70,8 +71,9 @@ export const CargarDocumento = () => {
       {/* Botón para abrir el modal */}
       <button
         onClick={() => setShowModal(true)}
-        className="top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600"
+        className=" flex items-center gap-2 top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600"
       >
+        <Upload size={20} />
         Cargar Documento
       </button>
 
@@ -81,7 +83,7 @@ export const CargarDocumento = () => {
           {/* Fondo oscuro con opacidad */}
           <div className="absolute inset-0 bg-gray-600 opacity-90"></div>
           {/* Contenido del modal que recibe los datos de creacion de documento */}
-          <div className="relative z-50 bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+          <div className="relative z-50 bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
 
             <button
               onClick={() => setShowModal(false)}
