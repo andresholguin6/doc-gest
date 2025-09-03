@@ -4,6 +4,7 @@ from app.api.v1.router import api_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.config import UPLOAD_DIR
+from app.config import CATEGORIAS_DIR
 
 app = FastAPI()
 
@@ -18,5 +19,8 @@ app.add_middleware(
 
 
 # Montar el directorio para servir archivos estáticos públicamente
-app.mount("/archivos", StaticFiles(directory=UPLOAD_DIR), name="archivos")
+#app.mount("/archivos", StaticFiles(directory=UPLOAD_DIR), name="archivos")
+
+# se monta el directorio de categorías para que se puedan servir los archivos que existan en cada subdirectorio de cada categoría creada.
+app.mount("/archivos", StaticFiles(directory=CATEGORIAS_DIR), name="archivos")
 app.include_router(api_router)  # registra el router para que FastAPI lo use
