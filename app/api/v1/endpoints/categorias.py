@@ -1,11 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from typing import List
+from urllib.parse import quote
 import os
 from app.schemas.CategoriaSchema import CategoriaCreate, CategoriaResponse
 from app.models.CategoriaModel import Categoria
+from app.models.UsuarioModel import Usuario
 from app.config import CATEGORIAS_DIR
+from app.auth import get_current_user
+from app.permisos import verificar_permiso
 
 router = APIRouter()
 
@@ -29,5 +33,9 @@ def crear_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):
     return nueva_categoria
 
 @router.get("/", response_model=List[CategoriaResponse])
-def listar_categorias(db: Session = Depends(get_db)):
+def listar_categorias(
+    db: Session = Depends(get_db),
+    # user: Usuario = Depends(get_current_user)  # ← Usuario autenticado
+):
+    # verificar_permiso(user.rol, "ver")  # ← Validar permiso para "ver"
     return db.query(Categoria).all()

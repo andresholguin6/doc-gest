@@ -69,7 +69,7 @@ export const Categorias = () => {
                                         </td>
                                         <td className="px-2 py-2">
                                             <a
-                                                href={`http://localhost:8000/archivos/${documento.ruta_archivo}`}
+                                                href={`http://localhost:8000/archivos/${categoriaSeleccionada.nombre}/${documento.ruta_archivo}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="text-blue-600 hover:underline"

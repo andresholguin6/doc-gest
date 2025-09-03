@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 class UsuarioCreate(BaseModel):
     username: str
@@ -24,3 +25,14 @@ class UsuarioLogin(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str
+    
+class UsuarioConPermisos(BaseModel):
+    id: int
+    username: str
+    rol: str
+    permisos: List[str]
+
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str
+    usuario: UsuarioConPermisos

@@ -1,10 +1,12 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
 from sqlalchemy.orm import Session
-from app.schemas.UsuarioSchema import UsuarioCreate, UsuarioResponse, UsuarioLogin, Token
+from app.schemas.UsuarioSchema import UsuarioCreate, UsuarioResponse, UsuarioLogin, LoginResponse
 from app.models.UsuarioModel import Usuario
 from app.auth import hash_password, crear_token, verificar_token, verify_password
 from app.db.database import get_db
+from app.permisos import verificar_permiso
+from app.roles import ROLES_PERMISOS
 
 router = APIRouter()
 
@@ -35,9 +37,10 @@ def crear_usuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
     # 4) Devolver sin la contraseña
     return nuevo_usuario
 
-#endpoint para autenticar a un usuario con sus credenciales
-
-@router.post("/login", response_model=Token)
+'''endpoint para autenticar a un usuario con sus credenciales y verificar que permisos tiene
+    para acceder a las funcionalidades de la aplicacion
+'''
+@router.post("/login", response_model=LoginResponse)
 def login(usuario: UsuarioLogin, db: Session = Depends(get_db)):
     # Buscar al usuario por username
     usuario_en_db = db.query(Usuario).filter(Usuario.username == usuario.username).first()
@@ -52,7 +55,22 @@ def login(usuario: UsuarioLogin, db: Session = Depends(get_db)):
     # Crear el token con datos del usuario (puedes incluir más si lo deseas)
     token = crear_token({"sub": usuario_en_db.username, "rol": usuario_en_db.rol})
 
-    return Token(access_token=token, token_type="bearer")
+    # Validar permisos
+    # verificar_permiso(usuario_en_db.rol, "login")
+    
+        # Armar usuario para la respuesta
+    usuario_data = {
+        "id": usuario_en_db.id,
+        "username": usuario_en_db.username,
+        "rol": usuario_en_db.rol,
+        "permisos": ROLES_PERMISOS.get(usuario_en_db.rol, [])
+    }
+    
+    return LoginResponse(
+        access_token=token,
+        token_type="bearer",
+        usuario=usuario_data
+    )
 
 @router.get("/", response_model=List[UsuarioResponse])
 def obtener_usuarios(db: Session = Depends(get_db)):

@@ -8,3 +8,4 @@ class Usuario(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
     rol = Column(String, default="usuario")  # Opcional: puedes poner 'admin', 'usuario', etc.
+    

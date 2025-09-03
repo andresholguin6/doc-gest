@@ -74,9 +74,12 @@ def obtener_documentos(request: Request, db: Session = Depends(get_db)):
     for d in documentos:
         doc = DocumentoRead.from_orm(d)
 
-        if d.ruta_archivo:  # Asegura que no sea None
-            url_segura = quote(str(d.ruta_archivo))#pasar la ruta donde se encuentra el archivo a una ruta publica para poder abrir el archivo en el navegador
+        if d.ruta_archivo and d.categoria:  # Asegura que no sea None, se arma la ruta para acceder a los archivos por categoría
+            relative_path = os.path.join(d.categoria.nombre, d.ruta_archivo).replace("\\", "/")
+            url_segura = quote(relative_path)
             doc.ruta_archivo = f"{request.base_url}archivos/{url_segura}"
+            # DEBUG: imprime en consola la ruta generada
+            print(f"[DEBUG] Documento ID={d.id} → {doc.ruta_archivo}")
         else:
             doc.ruta_archivo = None
 
