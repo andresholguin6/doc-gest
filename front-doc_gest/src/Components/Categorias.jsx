@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { CategoriaCard } from "../Components/CategoriaCard";
 import { X } from "lucide-react";
+import { VisorPdf } from "../Components/VisorPdf";
 
 export const Categorias = () => {
 
     const [categorias, setCategorias] = useState([]);
     const [mostrarDocs, setMostrarDocs] = useState(false);
     const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
+    const [documentoSeleccionado, setDocumentoSeleccionado] = useState(null);
 
     useEffect(() => {
         fetch("http://localhost:8000/categorias")
@@ -68,14 +70,24 @@ export const Categorias = () => {
                                             {new Date(documento.fecha_creacion).toLocaleDateString()}
                                         </td>
                                         <td className="px-2 py-2">
-                                            <a
+                                            {/* <a
                                                 href={`http://localhost:8000/archivos/${categoriaSeleccionada.nombre}/${documento.ruta_archivo}`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="text-blue-600 hover:underline"
                                             >
                                                 Ver documento
-                                            </a>
+                                            </a> */}
+                                            <button
+                                                onClick={() =>
+                                                    setDocumentoSeleccionado(
+                                                        `http://localhost:8000/archivos/${categoriaSeleccionada.nombre}/${documento.ruta_archivo}`
+                                                    )
+                                                }
+                                                className="text-blue-600 hover:underline"
+                                            >
+                                                Ver documento
+                                            </button>
                                         </td>
                                     </tr>
                                 ))
@@ -90,8 +102,14 @@ export const Categorias = () => {
                     </table>
                 </div>
             </div>
-            )
-            }
+            )}
+            {/* 👇 si hay documento seleccionado, muestra visor */}
+            {documentoSeleccionado && (
+                <VisorPdf 
+                    fileUrl={documentoSeleccionado}
+                    onClose={() => setDocumentoSeleccionado(null)}
+                />
+            )}
         </>
 
 
