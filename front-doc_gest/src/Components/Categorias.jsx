@@ -105,8 +105,9 @@ export const Categorias = () => {
             )}
             {/* 👇 si hay documento seleccionado, muestra visor */}
             {documentoSeleccionado && (
-                <VisorPdf 
+                <VisorPdf
                     fileUrl={documentoSeleccionado}
+                    open={true}
                     onClose={() => setDocumentoSeleccionado(null)}
                 />
             )}
