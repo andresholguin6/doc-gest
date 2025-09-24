@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Upload } from "lucide-react";
+import { ScanButton } from "./EscanearDocumento";
 
 export const CargarDocumento = () => {
   const [showModal, setShowModal] = useState(false);
@@ -11,6 +12,7 @@ export const CargarDocumento = () => {
   const [categoriaId, setCategoriaId] = useState("");
   const [categorias, setCategorias] = useState([]);
   const [mensajeExito, setMensajeExito] = useState("");
+  const [tipoMensaje, setTipoMensaje] = useState("exito");
 
 
   useEffect(() => {
@@ -42,6 +44,7 @@ export const CargarDocumento = () => {
 
       if (response.ok) {
         setMensajeExito("📄 ¡Documento cargado con éxito!");
+        setTipoMensaje("exito"); // bg toast color verde
         setShowModal(false);
         setTitulo("");
         setContenido("");
@@ -86,7 +89,13 @@ export const CargarDocumento = () => {
           <div className="relative z-50 bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
 
             <button
-              onClick={() => setShowModal(false)}
+              onClick={() => {
+                setShowModal(false);
+                setTitulo("");
+                setContenido("");
+                setCategoriaId("");
+                setArchivo(null);
+              }}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
             >
               <X />
@@ -151,12 +160,13 @@ export const CargarDocumento = () => {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <button
-                onClick={() => setShowModal(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-600"
-              >
-                Cancelar
-              </button>
+              <ScanButton
+                setArchivo={setArchivo}
+                onSuccess={(msg, tipo) => {
+                  setMensajeExito(msg);
+                  setTipoMensaje(tipo);
+                }}
+              />
               <button
                 onClick={handleUpload}
                 className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
@@ -170,7 +180,10 @@ export const CargarDocumento = () => {
 
       {/* Mensaje de éxito */}
       {mensajeExito && (
-        <div className="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300">{mensajeExito}</div>
+        <div className={`fixed bottom-5 right-5 px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
+      ${tipoMensaje === "success" ? "bg-green-500" : ""}
+      ${tipoMensaje === "info" ? "bg-blue-500" : ""}
+      ${tipoMensaje === "error" ? "bg-red-500" : ""}text-white`}>{mensajeExito}</div>
       )}
     </div>
   );

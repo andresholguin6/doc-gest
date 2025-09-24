@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CategoriaCard } from "../Components/CategoriaCard";
 import { X } from "lucide-react";
-import { VisorPdf } from "../Components/VisorPdf";
+import { VisorPdfRv } from "../Components/VisorPdfRv";
 
 export const Categorias = () => {
 
@@ -105,7 +105,7 @@ export const Categorias = () => {
             )}
             {/* 👇 si hay documento seleccionado, muestra visor */}
             {documentoSeleccionado && (
-                <VisorPdf
+                <VisorPdfRv
                     fileUrl={documentoSeleccionado}
                     open={true}
                     onClose={() => setDocumentoSeleccionado(null)}
