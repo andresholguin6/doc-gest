@@ -8,6 +8,7 @@ class Categoria(Base):
     id = Column(Integer, primary_key=True, index=True)
     nombre = Column(String, unique=True, index=True, nullable=False)
 
+    #Relación con Documentos.
     documentos = relationship("Documento", back_populates="categoria")
 
 

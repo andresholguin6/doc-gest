@@ -21,3 +21,13 @@ def get_db():
         yield db
     finally:
         db.close()
+        
+"""
+Configuración de la base de datos de la aplicación.
+
+Este módulo define el motor de conexión a la base de datos utilizando SQLAlchemy,
+la clase base para los modelos ORM y la gestión de sesiones.
+
+También expone la dependencia get_db, utilizada por FastAPI para inyectar
+una sesión de base de datos por request, asegurando su correcta apertura y cierre.
+"""

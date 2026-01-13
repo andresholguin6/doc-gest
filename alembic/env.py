@@ -19,10 +19,13 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Importa tus modelos y su metadata
-from app.models.CategoriaModel import Base
-from app.models.DocumentoModel import Base  # Asegúrate de que este import sea válido
-from app.models.UsuarioModel import Base  # Asegúrate de que este import sea válido
+from app.db.database import Base
+target_metadata = Base.metadata
+
+# Importa modelos para que se registren en Base.metadata (no para traer Base)
+import app.models.CategoriaModel
+import app.models.DocumentoModel
+import app.models.UsuarioModel # Asegúrate de que este import sea válido
 
 
 target_metadata = Base.metadata

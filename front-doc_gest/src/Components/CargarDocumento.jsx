@@ -181,7 +181,7 @@ export const CargarDocumento = () => {
       {/* Mensaje de éxito */}
       {mensajeExito && (
         <div className={`fixed bottom-5 right-5 px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
-      ${tipoMensaje === "success" ? "bg-green-500" : ""}
+      ${tipoMensaje === "exito" ? "bg-green-500" : ""}
       ${tipoMensaje === "info" ? "bg-blue-500" : ""}
       ${tipoMensaje === "error" ? "bg-red-500" : ""}text-white`}>{mensajeExito}</div>
       )}

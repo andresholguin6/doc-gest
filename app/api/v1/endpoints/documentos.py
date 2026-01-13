@@ -88,7 +88,6 @@ def obtener_documentos(request: Request, db: Session = Depends(get_db)):
     return documentos_read
 
 #Obtener un documento
-
 @router.get("/buscar", response_model=List[DocumentoRead])
 def buscar_documentos(
     query: str = Query(..., description="Texto a buscar por nombre de archivo o categoría"),

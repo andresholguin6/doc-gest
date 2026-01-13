@@ -1,11 +1,11 @@
 import os
 from datetime import datetime, timedelta
-from jose import JWTError, jwt
-from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt # Codificar y decodificar JWT
+from fastapi.security import OAuth2PasswordBearer # Extraer el token del header
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
 from fastapi import Depends,HTTPException, status
-from passlib.context import CryptContext
+from passlib.context import CryptContext # Hash seguro de contraseñas
 
 from app.db.database import get_db
 from app.models.UsuarioModel import Usuario
@@ -43,11 +43,17 @@ def verificar_token(token: str):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+# Contexto de cifrado que define el algoritmo a usar para las contraseñas.
+# Se utiliza bcrypt por ser un algoritmo seguro y recomendado.
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+# Recibe una contraseña en texto plano y la convierte en un hash seguro.
+# El valor retornado es el que se debe almacenar en la base de datos.
 def hash_password(password: str):
     return pwd_context.hash(password)
 
+# Verifica si una contraseña en texto plano coincide con su hash almacenado.
+# # Retorna True si la contraseña es válida, False en caso contrario.
 def verify_password(plain_password: str, hashed_password: str):
     return pwd_context.verify(plain_password, hashed_password)
 
@@ -64,8 +70,10 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         raise HTTPException(status_code=401, detail="Usuario no encontrado")
 
     return user
+
 '''
 Este archivo me permite utilizar la libreria passlib de python que toma las contraseñas
 que iran a la bd y las encrypta, y a su vez las verifica, para eso están las dos funciones
 y el pwd context, tambien me permite generar tokens de autenticacion y decodificarlos.
+
 '''
