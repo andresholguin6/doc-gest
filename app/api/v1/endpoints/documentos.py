@@ -1,20 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query
-from fastapi.responses import FileResponse
+#from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from sqlalchemy.orm import joinedload, selectinload
+from sqlalchemy.orm import selectinload
 from typing import List
 import os
 import shutil
 import re
 from urllib.parse import quote
 from datetime import datetime
-from app.db.database import SessionLocal
+#from app.db.database import SessionLocal
 from app.models.DocumentoModel import Documento
 from app.models.CategoriaModel import Categoria
 from fastapi import Request
-from app.schemas.DocumentSchema import DocumentoCreate, DocumentoRead
-from app.config import UPLOAD_DIR
+from app.schemas.DocumentSchema import DocumentoRead
 from app.config import CATEGORIAS_DIR
 from app.db.database import get_db
 
@@ -29,8 +28,6 @@ def crear_documento_con_archivo(
     categoria_id: int = Form(...),
     db: Session = Depends(get_db)
 ):
-    # Asegúrate de que el directorio exista
-    os.makedirs(UPLOAD_DIR, exist_ok=True)
 
     # Verificar que la categoría exista
     categoria = db.query(Categoria).filter(Categoria.id == categoria_id).first()

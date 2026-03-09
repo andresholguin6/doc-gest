@@ -4,7 +4,7 @@ from app.api.v1.router import api_router
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.core.config import Settings
-from app.config import UPLOAD_DIR
+#from app.config import UPLOAD_DIR
 from app.config import CATEGORIAS_DIR
 
 # entrada a la aplicación
