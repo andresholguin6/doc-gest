@@ -1,5 +1,12 @@
 # 📄 Doc-Gest(Document Management System)
 
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-D71F00?style=for-the-badge&logo=sqlalchemy&logoColor=white)
+
 Sistema de gestión documental fullstack desarrollado como proyecto personal para profundizar en arquitecturas desacopladas y buenas prácticas de desarrollo.
 Permite organizar, visualizar, descargar e imprimir documentos PDF desde una interfaz moderna, sin depender del visor nativo del navegador.
 
