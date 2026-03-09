@@ -31,13 +31,13 @@ Stack: FastAPI · React · Tailwind CSS · PostgreSQL · SQLAlchemy · Alembic
 ## 📸 Screenshots
 
 ### 🔐 Login
-![Login](assets/login.png)
+![Login](assets/Login.png)
 
 ### 📁 Panel principal
-![Panel principal](assets/dashboard.png)
+![Panel principal](assets/Dashboard.png)
 
 ### 📄 Visor PDF
-![Visor PDF](assets/viewer.png)
+![Visor PDF](assets/Viewer.png)
 
 ## 🧱 Arquitectura del proyecto
 
