@@ -39,6 +39,10 @@ Stack: FastAPI · React · Tailwind CSS · PostgreSQL · SQLAlchemy · Alembic
 ### 📄 Visor PDF
 ![Visor PDF](assets/Viewer.png)
 
+### 📚 Documentación de la API (Swagger)
+![Endpoints](assets/endpoints-1.png)
+![Endpoints](assets/endpoints-2.png)
+
 ## 🧱 Arquitectura del proyecto
 
 El proyecto está dividido en dos capas principales:
