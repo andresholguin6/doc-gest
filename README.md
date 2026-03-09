@@ -1,7 +1,11 @@
 # 📄 Doc-Gest(Document Management System)
 
-Sistema de gestión documental desarrollado con **FastAPI** en el backend y **React** en el frontend.  
-La aplicación permite organizar documentos por categorías, visualizarlos mediante un visor PDF embebido, descargarlos e imprimirlos sin depender del visor nativo del navegador.
+Sistema de gestión documental fullstack desarrollado como proyecto personal para profundizar en arquitecturas desacopladas y buenas prácticas de desarrollo.
+Permite organizar, visualizar, descargar e imprimir documentos PDF desde una interfaz moderna, sin depender del visor nativo del navegador.
+
+🛠️ Proyecto en desarrollo activo — actualmente se está implementando autenticación JWT y protección de endpoints.
+
+Stack: FastAPI · React · Tailwind CSS · PostgreSQL · SQLAlchemy · Alembic
 
 ---
 
