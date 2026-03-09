@@ -21,6 +21,17 @@ Stack: FastAPI · React · Tailwind CSS · PostgreSQL · SQLAlchemy · Alembic
 
 ---
 
+## 📸 Screenshots
+
+### 🔐 Login
+![Login](assets/login.png)
+
+### 📁 Panel principal
+![Panel principal](assets/dashboard.png)
+
+### 📄 Visor PDF
+![Visor PDF](assets/viewer.png)
+
 ## 🧱 Arquitectura del proyecto
 
 El proyecto está dividido en dos capas principales:
