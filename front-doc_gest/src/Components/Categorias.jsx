@@ -84,7 +84,7 @@ export const Categorias = () => {
                                                         `http://localhost:8000/archivos/${categoriaSeleccionada.nombre}/${documento.ruta_archivo}`
                                                     )
                                                 }
-                                                className="text-blue-600 hover:underline"
+                                                className="text-blue-600 hover:underline cursor-pointer"
                                             >
                                                 Ver documento
                                             </button>
