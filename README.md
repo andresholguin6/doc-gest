@@ -41,6 +41,7 @@ Stack: FastAPI · React · Tailwind CSS · PostgreSQL · SQLAlchemy · Alembic
 
 ### 📚 Documentación de la API (Swagger)
 ![Endpoints](assets/endpoints-1.png)
+
 ![Endpoints](assets/endpoints-2.png)
 
 ## 🧱 Arquitectura del proyecto
