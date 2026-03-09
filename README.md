@@ -138,29 +138,34 @@ Validación de rutas y permisos del backend
 
 ▶️ Ejecución del proyecto
 Backend
-Comando para iniciar el entorno virtual uvicorn en una consola:
 ```
-cmd
+# Crear y activar entorno virtual
+python -m venv venv
 
+# Windows
 .\venv\Scripts\activate.bat
-```
-Comando para iniciar la aplicación fastApi:
-```
-cmd
 
+# Linux / Mac
+source venv/bin/activate
+
+# Instalar dependencias
+pip install -r requirements.txt
+
+# Ejecutar migraciones
+alembic upgrade head
+
+# Iniciar el servidor
 uvicorn app.main:app --reload
-```
-Ruta del proyecto en donde se encuentra en frontend:
-```
-cmd
-
-C:\Users\Windows 10\Desktop\doc-gest\front-doc_gest>
 ```
 Comandos para iniciar el Frontend
 ```
-cmd
+# Entrar a la carpeta del frontend
+cd front-doc_gest
 
+# Instalar dependencias
 npm install
+
+# Iniciar en modo desarrollo
 npm run dev
 ```
 📌 Notas técnicas
