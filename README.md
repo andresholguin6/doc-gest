@@ -44,7 +44,8 @@ Stack: FastAPI · React · Tailwind CSS · PostgreSQL · SQLAlchemy · Alembic
 
 ![Endpoints](assets/endpoints-2.png)
 
-🎥 **Video Demo:** [Ver demostración en Loom](https://www.loom.com/share/a05bb8e00b4d46b2936ecbd3398824f1)
+## 🎥 Demo
+[![Video Demo](https://img.shields.io/badge/Ver%20Demo-Loom-purple?style=for-the-badge&logo=loom)](https://www.loom.com/share/a05bb8e00b4d46b2936ecbd3398824f1)
 
 ## 🧱 Arquitectura del proyecto
 
