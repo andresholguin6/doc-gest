@@ -3,7 +3,8 @@ import { CategoriaCard } from "../Components/CategoriaCard";
 import { X } from "lucide-react";
 import { VisorPdfRv } from "../Components/VisorPdfRv";
 
-export const Categorias = () => {
+                        // Recibe el contador como prop
+export const Categorias = ({ refreshKey }) => { 
 
     const [categorias, setCategorias] = useState([]);
     const [mostrarDocs, setMostrarDocs] = useState(false);
@@ -16,7 +17,7 @@ export const Categorias = () => {
             .then((data) => setCategorias(data))
             .catch((err) => console.error("Error cargando categorías:", err));
 
-    }, []);
+    }, [refreshKey]); // Se vuelve a ejecutar cada vez que refreshKey cambia
 
     const documentos = (categoria) => {
         setCategoriaSeleccionada(categoria);

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { PlusCircle, X } from "lucide-react";
 
-export const CrearUsuario = () => {
+export const CrearUsuario = ({ onSuccess }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [rol, setRol] = useState("usuario");
@@ -24,6 +24,7 @@ export const CrearUsuario = () => {
             );
             setMensajeExito("¡Usuario creado con éxito!");
             setMostrarFormulario(false)
+            onSuccess(); // 👈 dispara el refresco
         } catch (error) {
             console.error("Error al crear usuario", error);
             setMensajeExito("Hubo un error al crear el usuario");

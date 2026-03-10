@@ -4,7 +4,8 @@ import { X } from "lucide-react";
 import { Upload } from "lucide-react";
 import { ScanButton } from "./EscanearDocumento";
 
-export const CargarDocumento = () => {
+                          // Recibe la función de refresco
+export const CargarDocumento = ({ onSuccess, refreshKey }) => {
   const [showModal, setShowModal] = useState(false);
   const [titulo, setTitulo] = useState("");
   const [contenido, setContenido] = useState("");
@@ -27,7 +28,7 @@ export const CargarDocumento = () => {
     };
 
     ObtenerCategorias();
-  }, []);
+  }, [refreshKey]);
 
   const handleUpload = async () => {
     const formData = new FormData();
@@ -50,6 +51,7 @@ export const CargarDocumento = () => {
         setContenido("");
         setArchivo(null);
         setCategoriaId("");
+        onSuccess();// Llama al refresco después de crear exitosamente
         // Opcional: refrescar lista
       } else {
         throw new Error("Error al subir el documento");
@@ -152,7 +154,7 @@ export const CargarDocumento = () => {
 
                   {/* Mostrar el nombre del archivo seleccionado */}
                   {archivo && (
-                    <span className="text-sm text-gray-600 truncate max-w-xs">
+                    <span className="text-sm text-gray-600 truncate max-w-[200px] block overflow-hidden whitespace-nowrap">
                       {archivo.name}
                     </span>
                   )}

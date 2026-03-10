@@ -6,7 +6,7 @@ export const CategoriaCard = ({ nombre }) => {
             <div className="bg-blue-100 text-blue-600 p-2 rounded-full">
                 <Folder className="w-6 h-6" />
             </div>
-            <h2 className="text-lg font-semibold">{nombre}</h2>
+            <h2 className="text-lg font-semibold truncate">{nombre}</h2>
         </div>
     )
 }

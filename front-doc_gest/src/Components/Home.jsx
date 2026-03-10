@@ -13,6 +13,8 @@ export const Home = () => {
 
   const user = getUserFromToken();
   const [activeTab, setActiveTab] = useState("documentos");
+  const [refreshKey, setRefreshKey] = useState(0); // Estado contador para forzar refresco
+  const handleRefresh = () => setRefreshKey(prev => prev + 1); // Incrementa el contador al crear algo
 
   const renderContent = () => {
     switch (activeTab) {
@@ -30,12 +32,15 @@ export const Home = () => {
             <div className="flex justify-between gap-2">
               <BarraBusqueda />
               <div className="flex gap-2">
-                <CrearCategoria />
-                <CargarDocumento />
+                <CrearCategoria onSuccess={handleRefresh} />
+                {/* onSuccess={handleRefresh}Pasa la función de refresco a CrearCategoria */}
+                <CargarDocumento onSuccess={handleRefresh} refreshKey={refreshKey}/>
+                 {/* onSuccess={handleRefresh} Pasa la función de refresco a CargarDocumento */}
               </div>
             </div>
             <h1 className="text-2xl font-semibold mb-4">Categorías</h1>
-            <Categorias />
+            <Categorias refreshKey={refreshKey}/>
+            {/* refreshKey={refreshKey} Pasa el contador a Categorias para que sepa cuándo refrescar */}
             {/* <DocumentsList /> */}
           </div>
         );

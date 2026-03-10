@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export const ListaUsuarios = () => {
+export const ListaUsuarios = ({ refreshKey }) => {
     const [usuarios, setUsuarios] = useState([]);
     const [error, setError] = useState("");
 
@@ -22,7 +22,7 @@ export const ListaUsuarios = () => {
         };
 
         fetchUsuarios();
-    }, []);
+    }, [refreshKey]); // 👈 se refresca cuando cambia
 
     return (
         <div className="px-4 max-w-4xl mx-auto mt-8 bg-white shadow-md rounded-lg overflow-hidden">

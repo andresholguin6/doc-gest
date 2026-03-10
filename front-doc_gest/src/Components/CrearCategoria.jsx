@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { PlusCircle, X } from "lucide-react";
 
-export const CrearCategoria = () => {
+                          // Recibe la función de refresco
+export const CrearCategoria = ({ onSuccess }) => {
 
   const [nombre, setNombre] = useState("");
   const [mensaje, setMensaje] = useState("");
@@ -15,6 +16,7 @@ export const CrearCategoria = () => {
       setMensaje("Categoría creada con éxito!");
       setMostrarModal(false);
       setNombre("")
+      onSuccess();// Llama al refresco después de crear exitosamente
     } catch (error) {
       console.error("Error al crear categoría:", error);
       setMensaje("Error al crear categoría");
