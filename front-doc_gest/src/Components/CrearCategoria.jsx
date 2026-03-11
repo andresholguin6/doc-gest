@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { PlusCircle, X } from "lucide-react";
 
-                          // Recibe la función de refresco
+// Recibe la función de refresco
 export const CrearCategoria = ({ onSuccess }) => {
-
   const [nombre, setNombre] = useState("");
   const [mensaje, setMensaje] = useState("");
   const [mostrarModal, setMostrarModal] = useState(false);
@@ -15,8 +14,8 @@ export const CrearCategoria = ({ onSuccess }) => {
       await axios.post("http://localhost:8000/categorias", { nombre });
       setMensaje("Categoría creada con éxito!");
       setMostrarModal(false);
-      setNombre("")
-      onSuccess();// Llama al refresco después de crear exitosamente
+      setNombre("");
+      onSuccess(); // Llama al refresco después de crear exitosamente
     } catch (error) {
       console.error("Error al crear categoría:", error);
       setMensaje("Error al crear categoría");
@@ -33,7 +32,6 @@ export const CrearCategoria = ({ onSuccess }) => {
     }
   }, [mensaje]);
 
-
   return (
     <div className="mb-6">
       <button
@@ -41,7 +39,8 @@ export const CrearCategoria = ({ onSuccess }) => {
         onClick={() => setMostrarModal(true)}
       >
         <PlusCircle size={20} />
-        Nueva Categoría
+        <span className="sm:hidden">Categoría</span>
+        <span className="hidden sm:inline">Nueva Categoría</span>
       </button>
 
       {mostrarModal && (
@@ -86,8 +85,10 @@ export const CrearCategoria = ({ onSuccess }) => {
       )}
       {/* Mensaje de confirmacion de que se creó la categoría */}
       {mensaje && (
-        <div className="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300">{mensaje}</div>
+        <div className="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300">
+          {mensaje}
+        </div>
       )}
     </div>
-  )
-}
+  );
+};

@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Upload } from "lucide-react";
 import { ScanButton } from "./EscanearDocumento";
 
-                          // Recibe la función de refresco
+// Recibe la función de refresco
 export const CargarDocumento = ({ onSuccess, refreshKey }) => {
   const [showModal, setShowModal] = useState(false);
   const [titulo, setTitulo] = useState("");
@@ -14,7 +13,6 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
   const [categorias, setCategorias] = useState([]);
   const [mensajeExito, setMensajeExito] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("exito");
-
 
   useEffect(() => {
     const ObtenerCategorias = async () => {
@@ -51,7 +49,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
         setContenido("");
         setArchivo(null);
         setCategoriaId("");
-        onSuccess();// Llama al refresco después de crear exitosamente
+        onSuccess(); // Llama al refresco después de crear exitosamente
         // Opcional: refrescar lista
       } else {
         throw new Error("Error al subir el documento");
@@ -79,7 +77,8 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
         className=" flex items-center gap-2 top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600"
       >
         <Upload size={20} />
-        Cargar Documento
+        <span className="sm:hidden">Documento</span>
+        <span className="hidden sm:inline">Cargar Documento</span>
       </button>
 
       {/* Modal */}
@@ -88,8 +87,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
           {/* Fondo oscuro con opacidad */}
           <div className="absolute inset-0 bg-gray-600 opacity-90"></div>
           {/* Contenido del modal que recibe los datos de creacion de documento */}
-          <div className="relative z-50 bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-
+          <div className="relative z-50 bg-white p-6 rounded-xl shadow-lg w-full max-w-md mx-6 sm:mx-0">
             <button
               onClick={() => {
                 setShowModal(false);
@@ -143,7 +141,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
 
                 <div className="flex items-center space-x-4">
                   {/* Botón personalizado que dispara el input */}
-                  <label className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200">
+                  <label className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200 whitespace-nowrap">
                     Elegir archivo
                     <input
                       type="file"
@@ -154,7 +152,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
 
                   {/* Mostrar el nombre del archivo seleccionado */}
                   {archivo && (
-                    <span className="text-sm text-gray-600 truncate max-w-[200px] block overflow-hidden whitespace-nowrap">
+                    <span className="text-sm text-gray-600 truncate max-w-[150px] sm:max-w-[200px] block overflow-hidden whitespace-nowrap">
                       {archivo.name}
                     </span>
                   )}
@@ -182,11 +180,15 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
 
       {/* Mensaje de éxito */}
       {mensajeExito && (
-        <div className={`fixed bottom-5 right-5 px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
+        <div
+          className={`fixed bottom-5 right-5 px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
       ${tipoMensaje === "exito" ? "bg-green-500" : ""}
       ${tipoMensaje === "info" ? "bg-blue-500" : ""}
-      ${tipoMensaje === "error" ? "bg-red-500" : ""}text-white`}>{mensajeExito}</div>
+      ${tipoMensaje === "error" ? "bg-red-500" : ""}text-white`}
+        >
+          {mensajeExito}
+        </div>
       )}
     </div>
   );
-}
+};

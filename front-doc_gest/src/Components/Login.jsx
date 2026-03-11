@@ -33,7 +33,7 @@ export const Login = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <form onSubmit={handleLogin} className="bg-white p-6 rounded-xl shadow-md w-full max-w-md">
+            <form onSubmit={handleLogin} className="bg-white p-6 rounded-xl shadow-md w-full max-w-md mx-4 sm:mx-auto">
                 <div className="mt-6 mb-6 text-center">
                     <h2 className="text-3xl font-bold text-gray-800">Bienvenido de nuevo</h2>
                     <p className="text-sm text-gray-500 mt-1">Por favor, inicia sesión con tu cuenta</p>

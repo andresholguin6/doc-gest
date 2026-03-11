@@ -68,7 +68,7 @@ export const BarraBusqueda = () => {
   }, []);
 
   return (
-    <div className="w-100">
+    <div className="w-full">
       <div className="flex">
         <input
           type="text"
@@ -83,7 +83,7 @@ export const BarraBusqueda = () => {
       {buscado && (
         <div
           ref={resultadosRef}
-          className="absolute w-100 space-y-4 rounded-md"
+          className="absolute w-full space-y-4 rounded-md"
         >
           {!cargando && resultados.length === 0 ? (
             <div className="p-4 rounded-md bg-white shadow">
