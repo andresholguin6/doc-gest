@@ -37,6 +37,8 @@ export function VisorPdf({ fileUrl, open, onClose }) {
 
   if (!open) return null; // No renderiza nada si el modal está cerrado
 
+  console.log("VisorPdf renderizado");
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-400 bg-opacity-90">
       <div className="bg-white w-full max-w-6xl h-[90vh] rounded-lg shadow-lg flex flex-col">
@@ -53,9 +55,11 @@ export function VisorPdf({ fileUrl, open, onClose }) {
             </button>
             <button
               onClick={handlePrint}
-              className="p-2 rounded bg-gray-100 hover:bg-gray-200"
+              style={{ display: 'none' }}
+              className="hidden p-2 rounded bg-gray-100 hover:bg-gray-200"
               title="Imprimir"
             >
+              Hola mundo imprimir
               <Printer className="w-5 h-5" />
             </button>
             <button

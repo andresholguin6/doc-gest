@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { CategoriaCard } from "../Components/CategoriaCard";
-import { X } from "lucide-react";
+import { X, FileText } from "lucide-react";
 import { VisorPdfRv } from "../Components/VisorPdfRv";
 
 // Recibe el contador como prop
@@ -40,14 +40,80 @@ export const Categorias = ({ refreshKey }) => {
     <>
       <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {categorias.map((cat) => (
-          <div key={cat.id} onClick={() => documentos(cat)}>
-            <CategoriaCard nombre={cat.nombre} />
+          <div key={cat.id}>
+            <div onClick={() => documentos(cat)}>
+              <CategoriaCard nombre={cat.nombre} />
+            </div>
+
+            {/* Lista debajo de cada categoría — solo visible en móvil */}
+            {mostrarDocs && categoriaSeleccionada?.id === cat.id && (
+              <div className="mt-2 bg-white shadow-md rounded-lg overflow-hidden md:hidden">
+                <div className="p-3 border-b border-gray-300 flex justify-between items-center">
+                  <h2 className="text-sm font-semibold text-gray-800">
+                    {cat.nombre}
+                  </h2>
+                  <button
+                    onClick={cerrarDocumentos}
+                    className="text-gray-500 hover:text-gray-800 cursor-pointer"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+                <table className="w-full table-fixed text-center text-xs">
+                  <thead className="text-gray-600 border-b border-gray-300">
+                    <tr>
+                      <th className="w-1/3 px-2 py-2">Título</th>
+                      <th className="w-1/3 px-2 py-2">Fecha</th>
+                      <th className="w-1/3 px-2 py-2">Ver</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-gray-700">
+                    {cat.documentos.length > 0 ? (
+                      cat.documentos.map((documento) => (
+                        <tr
+                          key={documento.id}
+                          className="border-b border-gray-300 last:border-none hover:bg-gray-100"
+                        >
+                          <td className="px-2 py-2 truncate">
+                            {documento.titulo}
+                          </td>
+                          <td className="px-2 py-2 whitespace-nowrap">
+                            {new Date(
+                              documento.fecha_creacion
+                            ).toLocaleDateString()}
+                          </td>
+                          <td className="px-2 py-2">
+                            <button
+                              onClick={() =>
+                                setDocumentoSeleccionado(
+                                  `http://localhost:8000/archivos/${cat.nombre}/${documento.ruta_archivo}`
+                                )
+                              }
+                              className="text-blue-600 hover:text-blue-800 cursor-pointer"
+                            >
+                              <FileText size={16} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="3" className="py-4 text-gray-500">
+                          Sin documentos.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         ))}
       </div>
 
+      {/* Lista debajo de la grilla — solo visible en desktop */}
       {mostrarDocs && categoriaSeleccionada && (
-        <div className=" px-4 max-w-4xl mx-auto mt-8 bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="hidden md:block px-4 max-w-4xl mx-auto mt-8 bg-white shadow-md rounded-lg overflow-hidden">
           <div className="p-4 border-b border-b-gray-300 flex justify-between items-center relative">
             <h2 className="text-xl font-semibold text-gray-800">
               {categoriaSeleccionada.nombre}
@@ -82,14 +148,6 @@ export const Categorias = ({ refreshKey }) => {
                         ).toLocaleDateString()}
                       </td>
                       <td className="px-2 py-2">
-                        {/* <a
-                                                href={`http://localhost:8000/archivos/${categoriaSeleccionada.nombre}/${documento.ruta_archivo}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 hover:underline"
-                                            >
-                                                Ver documento
-                                            </a> */}
                         <button
                           onClick={() =>
                             setDocumentoSeleccionado(

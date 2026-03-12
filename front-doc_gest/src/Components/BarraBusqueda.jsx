@@ -68,7 +68,7 @@ export const BarraBusqueda = () => {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       <div className="flex">
         <input
           type="text"

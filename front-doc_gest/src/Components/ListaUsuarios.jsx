@@ -34,7 +34,7 @@ export const ListaUsuarios = ({ refreshKey }) => {
                 <p className="text-red-500 text-sm mb-4">{error}</p>
             )}
 
-            <table className="w-full table-fixed text-center text-sm">
+            <table className="w-full table-fixed text-center text-xs sm:text-sm">
                 <thead className="text-gray-600 border-b-gray-300">
                     <tr className="bg-gray-200">
                         <th className="w-1/2 p-2">Nombre</th>
@@ -44,7 +44,7 @@ export const ListaUsuarios = ({ refreshKey }) => {
                 <tbody className="text-gray-700">
                     {usuarios.map((usuario) => (
                         <tr key={usuario.id} className="border-b border-b-gray-300 last:border-none hover:bg-gray-100">
-                            <td className="p-2">{usuario.username}</td>
+                            <td className="p-2 truncate">{usuario.username}</td>
                             <td className="p-2 capitalize">{usuario.rol}</td>
                         </tr>
                     ))}

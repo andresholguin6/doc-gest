@@ -31,9 +31,9 @@ export const Home = () => {
             <h1 className="text-2xl font-semibold mb-6">
               Bienvenido a tu gestor documental
             </h1>
-            <div className="flex flex-col sm:flex-row sm:items-stretch justify-between gap-2 mb-4">
+            <div className="flex flex-col lg:flex-row lg:items-stretch justify-between gap-2 mb-4">
               <BarraBusqueda />
-              <div className="flex gap-2 shrink-0 justify-center sm:justify-end mt-4 sm:mt-0">
+              <div className="flex gap-2 shrink-0 justify-center sm:justify-center mt-4 sm:mt-0">
                 <CrearCategoria onSuccess={handleRefresh} />
                 {/* onSuccess={handleRefresh}Pasa la función de refresco a CrearCategoria */}
                 <CargarDocumento
