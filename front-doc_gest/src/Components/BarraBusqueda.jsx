@@ -100,7 +100,9 @@ export const BarraBusqueda = () => {
                     className="last:border-b-0 hover:bg-gray-100 cursor-pointer"
                     onClick={() =>
                       setDocumentoSeleccionado(
-                        `http://localhost:8000/archivos/${doc.categoria.nombre}/${doc.ruta_archivo}`
+                        `${import.meta.env.VITE_API_URL}/archivos/${
+                          doc.categoria.nombre
+                        }/${doc.ruta_archivo}`
                       )
                     } // 👈 abre el visor al hacer clic
                   >
