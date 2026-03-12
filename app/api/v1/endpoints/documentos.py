@@ -1,5 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, Query
-#from fastapi.responses import FileResponse
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    UploadFile,
+    File,
+    Form,
+    Query,
+    logger,
+)
+
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from sqlalchemy.orm import selectinload
@@ -9,7 +18,6 @@ import shutil
 import re
 from urllib.parse import quote
 from datetime import datetime
-#from app.db.database import SessionLocal
 from app.models.DocumentoModel import Documento
 from app.models.CategoriaModel import Categoria
 from fastapi import Request
@@ -19,16 +27,15 @@ from app.db.database import get_db
 
 router = APIRouter()
 
-#Crear un documento
+# Crear un documento
 @router.post("/", response_model=DocumentoRead)
 def crear_documento_con_archivo(
     titulo: str = Form(...),
     contenido: str = Form(None),
     archivo: UploadFile = File(...),
     categoria_id: int = Form(...),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
-
     # Verificar que la categoría exista
     categoria = db.query(Categoria).filter(Categoria.id == categoria_id).first()
     if not categoria:
@@ -40,64 +47,86 @@ def crear_documento_con_archivo(
 
     # Limpia el nombre: reemplaza espacios por guiones bajos y elimina caracteres raros
     nombre_archivo = re.sub(r"[^\w\-_\.]", "_", archivo.filename)
+    ruta_archivo = os.path.join(categoria_dir, nombre_archivo)
 
     # Guardar archivo en disco
-    ruta_archivo = os.path.join(categoria_dir, nombre_archivo)
-    with open(ruta_archivo, "wb") as buffer:
-        shutil.copyfileobj(archivo.file, buffer)
+    try:
+        with open(ruta_archivo, "wb") as buffer:
+            shutil.copyfileobj(archivo.file, buffer)
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error al guardar el archivo: {str(e)}"
+        )
 
-    # Crear el documento con la ruta del archivo
-    nuevo_documento = Documento(
-        titulo=titulo,
-        contenido=contenido,
-        fecha_creacion=datetime.utcnow(),
-        ruta_archivo=nombre_archivo,
-        categoria_id=categoria_id
-    )
+    # Crear el documento en la base de datos
+    try:
+        nuevo_documento = Documento(
+            titulo=titulo,
+            contenido=contenido,
+            fecha_creacion=datetime.utcnow(),
+            ruta_archivo=nombre_archivo,
+            categoria_id=categoria_id,
+        )
+        db.add(nuevo_documento)
+        db.commit()
+        db.refresh(nuevo_documento)
+    except Exception as e:
+        # Si falla la BD, elimina el archivo que ya se guardó en disco
+        if os.path.exists(ruta_archivo):
+            os.remove(ruta_archivo)
+        raise HTTPException(
+            status_code=500, detail=f"Error al guardar en base de datos: {str(e)}"
+        )
 
-    db.add(nuevo_documento)
-    db.commit()
-    db.refresh(nuevo_documento)
+    return nuevo_documento
 
-    return (nuevo_documento)
 
-# Obtener todos los documentos
 @router.get("/", response_model=List[DocumentoRead])
 def obtener_documentos(request: Request, db: Session = Depends(get_db)):
-    documentos = db.query(Documento).all()
-    
-    #arreglo que devuelve los documentos con la ruta publica
+    try:
+        documentos = db.query(Documento).all()
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error al obtener documentos: {str(e)}"
+        )
+
     documentos_read = []
     for d in documentos:
         doc = DocumentoRead.from_orm(d)
-
-        if d.ruta_archivo and d.categoria:  # Asegura que no sea None, se arma la ruta para acceder a los archivos por categoría
-            relative_path = os.path.join(d.categoria.nombre, d.ruta_archivo).replace("\\", "/")
+        if d.ruta_archivo and d.categoria:
+            relative_path = os.path.join(d.categoria.nombre, d.ruta_archivo).replace(
+                "\\", "/"
+            )
             url_segura = quote(relative_path)
             doc.ruta_archivo = f"{request.base_url}archivos/{url_segura}"
-            # DEBUG: imprime en consola la ruta generada
-            print(f"[DEBUG] Documento ID={d.id} → {doc.ruta_archivo}")
+            logger.debug(f"Documento ID={d.id} → {doc.ruta_archivo}")
         else:
             doc.ruta_archivo = None
-
         documentos_read.append(doc)
-            
+
     return documentos_read
 
-#Obtener un documento
+
+# Obtener un documento
 @router.get("/buscar", response_model=List[DocumentoRead])
 def buscar_documentos(
-    query: str = Query(..., description="Texto a buscar por nombre de archivo o categoría"),
-    db: Session = Depends(get_db)
-    
+    query: str = Query(
+        ..., description="Texto a buscar por nombre de archivo o categoría"
+    ),
+    db: Session = Depends(get_db),
 ):
-    query_like = f"%{query.lower()}%"
+    try:
+        query_like = f"%{query.lower()}%"
+        documentos = (
+            db.query(Documento)
+            .options(selectinload(Documento.categoria))
+            .filter(func.lower(Documento.titulo).like(query_like))
+            .all()
+        )
 
-    documentos = (
-        db.query(Documento)
-        .options(selectinload(Documento.categoria))  # Carga la categoría si la necesitas en el schema
-        .filter(func.lower(Documento.titulo).like(query_like))
-        .all()
-    )
+        return documentos
 
-    return documentos
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Error al buscar documentos: {str(e)}"
+        )

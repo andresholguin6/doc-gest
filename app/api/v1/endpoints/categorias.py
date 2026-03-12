@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.database import get_db
 from typing import List
@@ -12,6 +12,7 @@ from app.auth import get_current_user
 from app.permisos import verificar_permiso
 
 router = APIRouter()
+
 
 @router.post("/", response_model=CategoriaResponse)
 def crear_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):
@@ -27,10 +28,18 @@ def crear_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):
     db.refresh(nueva_categoria)
 
     # Crea el directorio físico en disco
-    categoria_path = os.path.join(CATEGORIAS_DIR, categoria.nombre)
-    os.makedirs(categoria_path, exist_ok=True)
+    try:
+        categoria_path = os.path.join(CATEGORIAS_DIR, categoria.nombre)
+        os.makedirs(categoria_path, exist_ok=True)
+    except Exception as e:
+        db.delete(nueva_categoria)
+        db.commit()
+        raise HTTPException(
+            status_code=500, detail=f"Error al crear el directorio: {str(e)}"
+        )
 
     return nueva_categoria
+
 
 @router.get("/", response_model=List[CategoriaResponse])
 def listar_categorias(

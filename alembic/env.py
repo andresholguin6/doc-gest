@@ -7,7 +7,7 @@ import os
 import sys
 
 # Agrega el path raíz para que Alembic encuentre tu app
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Carga las variables del entorno desde el .env
 load_dotenv()
@@ -20,15 +20,15 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 from app.db.database import Base
-target_metadata = Base.metadata
 
 # Importa modelos para que se registren en Base.metadata (no para traer Base)
 import app.models.CategoriaModel
 import app.models.DocumentoModel
-import app.models.UsuarioModel # Asegúrate de que este import sea válido
+import app.models.UsuarioModel  # Asegúrate de que este import sea válido
 
 
 target_metadata = Base.metadata
+
 
 def run_migrations_offline():
     """Modo offline: genera SQL sin conectarse a la base de datos"""
@@ -42,6 +42,7 @@ def run_migrations_offline():
 
     with context.begin_transaction():
         context.run_migrations()
+
 
 def run_migrations_online():
     """Modo online: conecta a la base de datos y aplica migraciones"""
@@ -57,6 +58,7 @@ def run_migrations_online():
 
         with context.begin_transaction():
             context.run_migrations()
+
 
 # Decide si ejecutar online u offline
 if context.is_offline_mode():
