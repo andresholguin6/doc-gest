@@ -5,7 +5,7 @@ a el tratamiento de los documentos.
 
 ROLES_PERMISOS = {
     "usuario": ["ver"],
-    "admin": ["ver", "descargar"],
-    "impresion": ["ver", "imprimir"],
-    "superadmin": ["ver", "descargar", "imprimir"]
+    "editor": ["ver", "crear"],
+    "admin": ["ver", "crear", "descargar", "imprimir", "gestionar_usuarios"],
+    "superadmin": ["ver", "crear", "descargar", "imprimir", "gestionar_usuarios", "gestionar_roles"]
 }

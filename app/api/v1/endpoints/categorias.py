@@ -15,8 +15,15 @@ router = APIRouter()
 
 
 @router.post("/", response_model=CategoriaResponse)
-def crear_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):
+def crear_categoria(
+    categoria: CategoriaCreate,
+    db: Session = Depends(get_db),
+    user: Usuario = Depends(get_current_user),  # ← usuario autenticado
+):
 
+    # Solo roles con permiso "crear" pueden crear categorías
+    verificar_permiso(user.rol, "crear")
+    
     # Verifica si ya existe la categoría
     existente = db.query(Categoria).filter(Categoria.nombre == categoria.nombre).first()
     if existente:
@@ -44,7 +51,7 @@ def crear_categoria(categoria: CategoriaCreate, db: Session = Depends(get_db)):
 @router.get("/", response_model=List[CategoriaResponse])
 def listar_categorias(
     db: Session = Depends(get_db),
-    # user: Usuario = Depends(get_current_user)  # ← Usuario autenticado
+    user: Usuario = Depends(get_current_user)  # ← Usuario autenticado
 ):
-    # verificar_permiso(user.rol, "ver")  # ← Validar permiso para "ver"
+    verificar_permiso(user.rol, "ver")  # ← Validar permiso para "ver"
     return db.query(Categoria).all()
