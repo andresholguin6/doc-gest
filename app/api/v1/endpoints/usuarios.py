@@ -3,15 +3,24 @@ from typing import List
 from sqlalchemy.orm import Session
 from app.schemas.UsuarioSchema import UsuarioCreate, UsuarioResponse
 from app.models.UsuarioModel import Usuario
-from app.auth import hash_password
+from app.auth import hash_password, get_current_user
 from app.db.database import get_db
+from app.permisos import verificar_permiso
 
 router = APIRouter()
 
 
 # endpoint para crear un usuario en la bd
 @router.post("/", response_model=UsuarioResponse, status_code=status.HTTP_201_CREATED)
-def crear_usuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
+def crear_usuario(
+    usuario: UsuarioCreate,
+    db: Session = Depends(get_db),
+    user: Usuario = Depends(get_current_user),
+):
+
+    # Solo admin y superadmin pueden crear usuarios
+    verificar_permiso(user.rol, "gestionar_usuarios")
+
     # 1) Verificar que no exista
     user_existente = (
         db.query(Usuario).filter(Usuario.username == usuario.username).first()
@@ -37,5 +46,10 @@ def crear_usuario(usuario: UsuarioCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/", response_model=List[UsuarioResponse])
-def obtener_usuarios(db: Session = Depends(get_db)):
+def obtener_usuarios(
+    db: Session = Depends(get_db), user: Usuario = Depends(get_current_user)
+):
+    # Solo admin y superadmin pueden listar usuarios
+    verificar_permiso(user.rol, "gestionar_usuarios")
+
     return db.query(Usuario).all()

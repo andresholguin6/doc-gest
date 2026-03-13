@@ -17,7 +17,7 @@ export const Login = () => {
         setError("");
 
         try {
-            const response = await axios.post("http://localhost:8000/usuarios/login", form);
+            const response = await axios.post("http://localhost:8000/autenticacion/login", form);
 
             const { access_token } = response.data;
 

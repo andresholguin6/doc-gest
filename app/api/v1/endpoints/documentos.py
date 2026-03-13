@@ -24,8 +24,12 @@ from fastapi import Request
 from app.schemas.DocumentSchema import DocumentoRead
 from app.config import CATEGORIAS_DIR
 from app.db.database import get_db
+from app.models.UsuarioModel import Usuario
+from app.auth import get_current_user
+from app.permisos import verificar_permiso
 
 router = APIRouter()
+
 
 # Crear un documento
 @router.post("/", response_model=DocumentoRead)
@@ -35,7 +39,11 @@ def crear_documento_con_archivo(
     archivo: UploadFile = File(...),
     categoria_id: int = Form(...),
     db: Session = Depends(get_db),
+    user: Usuario = Depends(get_current_user),  # ← Usuario autenticado
 ):
+    # Solo roles con permiso "crear" pueden subir documentos
+    verificar_permiso(user.rol, "crear")
+
     # Verificar que la categoría exista
     categoria = db.query(Categoria).filter(Categoria.id == categoria_id).first()
     if not categoria:
@@ -82,7 +90,11 @@ def crear_documento_con_archivo(
 
 
 @router.get("/", response_model=List[DocumentoRead])
-def obtener_documentos(request: Request, db: Session = Depends(get_db)):
+def obtener_documentos(
+    request: Request,
+    db: Session = Depends(get_db),
+    user: Usuario = Depends(get_current_user) # ← Usuario autenticado
+):
     try:
         documentos = db.query(Documento).all()
     except Exception as e:

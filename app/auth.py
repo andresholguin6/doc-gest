@@ -16,7 +16,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60
 REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 # Extrae el token del header Authorization
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/autenticacion/login")
 
 # Contexto de cifrado bcrypt para contraseñas
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
