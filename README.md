@@ -10,7 +10,7 @@
 Sistema de gestión documental fullstack desarrollado como proyecto personal para profundizar en arquitecturas desacopladas y buenas prácticas de desarrollo.
 Permite organizar, visualizar, descargar e imprimir documentos PDF desde una interfaz moderna, sin depender del visor nativo del navegador.
 
-🛠️ Proyecto en desarrollo activo — actualmente se está implementando autenticación JWT y protección de endpoints.
+🔐 Autenticación JWT implementada con access token, refresh token y protección de endpoints por roles y permisos.
 
 Stack: FastAPI · React · Tailwind CSS · PostgreSQL · SQLAlchemy · Alembic
 
@@ -25,6 +25,9 @@ Stack: FastAPI · React · Tailwind CSS · PostgreSQL · SQLAlchemy · Alembic
 - 🎨 Interfaz moderna y responsiva
 - 🔐 Backend desacoplado y preparado para escalabilidad
 - 🗂️ Migraciones de base de datos versionadas
+- 🔐 Autenticación JWT con access token y refresh token
+- 👥 Sistema de roles y permisos (usuario, editor, admin, superadmin)
+- 🛡️ Endpoints protegidos por rol
 
 ---
 
@@ -114,6 +117,10 @@ Ideal para desarrollo y producción
 
 🔐 Variables de entorno
 Configuración del proyecto mediante variables de entorno (.env).
+
+SECRET_KEY para firma de tokens JWT
+
+VITE_API_URL para configuración del frontend
 
 Credenciales de base de datos
 
@@ -205,7 +212,9 @@ El backend sirve tanto metadata como archivos físicos
 
 Arquitectura preparada para futuras extensiones:
 
-Autenticación y roles
+Autenticación JWT implementada con roles y permisos
+
+Versionado de documentos
 
 Control de permisos
 
