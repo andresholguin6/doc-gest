@@ -40,9 +40,9 @@ Stack: FastAPI · React · Tailwind CSS · PostgreSQL · SQLAlchemy · Alembic
 ![Visor PDF](assets/Viewer.png)
 
 ### 📚 Documentación de la API (Swagger)
-![Endpoints](assets/endpoints-1.png)
+![Endpoints](assets/endpoints_aith.png)
 
-![Endpoints](assets/endpoints-3.png)
+![Endpoints](assets/endpoints_auth_2.png)
 
 ## 🎥 Demo
 [![Video Demo](https://img.shields.io/badge/Ver%20Demo-Loom-purple?style=for-the-badge&logo=loom)](https://www.loom.com/share/a05bb8e00b4d46b2936ecbd3398824f1)
