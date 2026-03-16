@@ -59,7 +59,7 @@ def login(usuario: UsuarioLogin, db: Session = Depends(get_db)):
 
 
 # Endpoint para renovar el access token usando el refresh token
-@router.post("/refresh", response_model=Token, summary="Renovar Token")
+@router.post("/renovar_token", response_model=Token, summary="Renovar Token")
 def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
     payload = verificar_refresh_token(refresh_token)
     username = payload.get("sub")
