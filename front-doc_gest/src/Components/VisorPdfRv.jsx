@@ -6,7 +6,7 @@ import { X } from "lucide-react";
 
 import workerUrl from "pdfjs-dist/build/pdf.worker.min.js?url";
 
-export function VisorPdfRv({ fileUrl, onClose }) {
+export function VisorPdfRv({ fileUrl, onClose, user }) {
   // Inicializamos el plugin toolbar
   const toolbarPluginInstance = toolbarPlugin();
   const { Toolbar } = toolbarPluginInstance;
@@ -44,10 +44,16 @@ export function VisorPdfRv({ fileUrl, onClose }) {
                   <GoToNextPage />
                   <ZoomOut />
                   <ZoomIn />
-                  <Download />
-                  <div className="hidden lg:block">
-                    <Print />
-                  </div>
+                  {/* Solo roles con permiso de descarga */}
+                  {(user?.rol === "admin" || user?.rol === "superadmin") && (
+                    <Download />
+                  )}
+                  {/* Solo roles con permiso de impresión */}
+                  {(user?.rol === "admin" || user?.rol === "superadmin") && (
+                    <div className="hidden lg:block">
+                      <Print />
+                    </div>
+                  )}
                 </div>
               );
             }}

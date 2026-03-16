@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { VisorPdfRv } from "./VisorPdfRv";
-import axios from "axios";
+import axiosInstance from "../utils/axios";
 
 export const BarraBusqueda = () => {
   const [query, setQuery] = useState("");
@@ -31,12 +31,9 @@ export const BarraBusqueda = () => {
       const buscar = async () => {
         setCargando(true);
         try {
-          const res = await axios.get(
-            "http://localhost:8000/documentos/buscar",
-            {
-              params: { query },
-            }
-          );
+          const res = await axiosInstance.get("/documentos/buscar", {
+            params: { query },
+          });
           setResultados(res.data);
           setBuscado(true);
         } catch (err) {

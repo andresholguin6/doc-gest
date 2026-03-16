@@ -1,24 +1,32 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axios";
 import { PlusCircle, X } from "lucide-react";
 
 // Recibe la función de refresco
 export const CrearCategoria = ({ onSuccess }) => {
   const [nombre, setNombre] = useState("");
   const [mensaje, setMensaje] = useState("");
+  const [tipoMensaje, setTipoMensaje] = useState("exito");
   const [mostrarModal, setMostrarModal] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8000/categorias", { nombre });
+      await axiosInstance.post("/categorias/", { nombre });
       setMensaje("Categoría creada con éxito!");
       setMostrarModal(false);
       setNombre("");
       onSuccess(); // Llama al refresco después de crear exitosamente
     } catch (error) {
-      console.error("Error al crear categoría:", error);
-      setMensaje("Error al crear categoría");
+      if (error.response?.status === 403) {
+        setMensaje("No tienes permisos para crear categorías.");
+        setTipoMensaje("error");
+        setNombre("");
+      } else {
+        setMensaje("❌ Error al cargar el documento.");
+        setTipoMensaje("error");
+      }
+      setMostrarModal(false);
     }
   };
 
@@ -85,7 +93,12 @@ export const CrearCategoria = ({ onSuccess }) => {
       )}
       {/* Mensaje de confirmacion de que se creó la categoría */}
       {mensaje && (
-        <div className="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300">
+        <div
+          className={`fixed bottom-5 right-5 px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
+        ${tipoMensaje === "exito" ? "bg-green-500" : ""}
+        ${tipoMensaje === "info" ? "bg-blue-500" : ""}
+        ${tipoMensaje === "error" ? "bg-red-500" : ""} text-white`}
+        >
           {mensaje}
         </div>
       )}

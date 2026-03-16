@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { CategoriaCard } from "../Components/CategoriaCard";
 import { X, FileText } from "lucide-react";
 import { VisorPdfRv } from "../Components/VisorPdfRv";
+import axiosInstance from "../utils/axios";
+import { getUserFromToken } from "../utils/auth";
 
 // Recibe el contador como prop
 export const Categorias = ({ refreshKey }) => {
@@ -11,13 +13,12 @@ export const Categorias = ({ refreshKey }) => {
   const [documentoSeleccionado, setDocumentoSeleccionado] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/categorias")
-      .then((res) => res.json())
-      .then((data) => {
-        setCategorias(data);
-        // 👈 si hay una categoría abierta, actualizarla con los datos frescos
+    axiosInstance
+      .get("/categorias/")
+      .then((res) => {
+        setCategorias(res.data);
         if (categoriaSeleccionada) {
-          const actualizada = data.find(
+          const actualizada = res.data.find(
             (c) => c.id === categoriaSeleccionada.id
           );
           if (actualizada) setCategoriaSeleccionada(actualizada);
@@ -86,7 +87,7 @@ export const Categorias = ({ refreshKey }) => {
                             <button
                               onClick={() =>
                                 setDocumentoSeleccionado(
-                                  `http://localhost:8000/archivos/${cat.nombre}/${documento.ruta_archivo}`
+                                  `${import.meta.env.VITE_API_URL}/archivos/${cat.nombre}/${documento.ruta_archivo}`
                                 )
                               }
                               className="text-blue-600 hover:text-blue-800 cursor-pointer"
@@ -151,7 +152,7 @@ export const Categorias = ({ refreshKey }) => {
                         <button
                           onClick={() =>
                             setDocumentoSeleccionado(
-                              `http://localhost:8000/archivos/${categoriaSeleccionada.nombre}/${documento.ruta_archivo}`
+                              `${import.meta.env.VITE_API_URL}/archivos/${categoriaSeleccionada.nombre}/${documento.ruta_archivo}`
                             )
                           }
                           className="text-blue-600 hover:underline cursor-pointer"
@@ -179,6 +180,7 @@ export const Categorias = ({ refreshKey }) => {
           fileUrl={documentoSeleccionado}
           open={true}
           onClose={() => setDocumentoSeleccionado(null)}
+          user={getUserFromToken()}
         />
       )}
     </>

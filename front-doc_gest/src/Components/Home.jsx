@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { SideBar } from "./SideBar";
-import { DocumentsList } from "./DocumentsList";
 import { CargarDocumento } from "./CargarDocumento";
 import { Categorias } from "./Categorias";
 import { CrearCategoria } from "./CrearCategoria";
@@ -11,15 +11,24 @@ import { getUserFromToken } from "../utils/auth";
 
 export const Home = () => {
   const user = getUserFromToken();
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false); // controla si el sidebar está abierto en móvil
   const [activeTab, setActiveTab] = useState("documentos");
   const [refreshKey, setRefreshKey] = useState(0); // Estado contador para forzar refresco
   const handleRefresh = () => setRefreshKey((prev) => prev + 1); // Incrementa el contador al crear algo
 
+    // Si no hay token redirige al login
+    useEffect(() => {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        navigate("/");
+      }
+    }, []);
+
   const renderContent = () => {
     switch (activeTab) {
       case "adminUsuarios":
-        if (user?.rol === "superadmin") {
+        if (user?.rol === "superadmin" || user?.rol === "admin") {
           return <DashboardAdmUsers />;
         }
         return <p>No tienes acceso a esta sección.</p>;

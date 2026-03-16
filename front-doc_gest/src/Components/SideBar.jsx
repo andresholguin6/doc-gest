@@ -9,7 +9,8 @@ export const SideBar = ({
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); //Elimina el token
+    localStorage.removeItem("access_token"); //Elimina el token
+    localStorage.removeItem("refresh_token"); //Elimina el refresh token
     navigate("/"); // Redirige al login
   };
   return (

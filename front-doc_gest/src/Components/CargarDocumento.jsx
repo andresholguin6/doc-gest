@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Upload } from "lucide-react";
 import { ScanButton } from "./EscanearDocumento";
+import axiosInstance from "../utils/axios";
 
 // Recibe la función de refresco
 export const CargarDocumento = ({ onSuccess, refreshKey }) => {
@@ -17,9 +18,8 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
   useEffect(() => {
     const ObtenerCategorias = async () => {
       try {
-        const res = await fetch("http://localhost:8000/categorias/");
-        const data = await res.json();
-        setCategorias(data);
+        const res = await axiosInstance.get("/categorias/");
+        setCategorias(res.data);
       } catch (error) {
         console.error("Error al cargar categorías", error);
       }
@@ -36,26 +36,33 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
     formData.append("categoria_id", categoriaId);
 
     try {
-      const response = await fetch("http://localhost:8000/documentos/", {
-        method: "POST",
-        body: formData,
+      await axiosInstance.post("/documentos/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      if (response.ok) {
-        setMensajeExito("📄 ¡Documento cargado con éxito!");
-        setTipoMensaje("exito"); // bg toast color verde
-        setShowModal(false);
+      setMensajeExito("📄 ¡Documento cargado con éxito!");
+      setTipoMensaje("exito");
+      setShowModal(false);
+      setTitulo("");
+      setContenido("");
+      setArchivo(null);
+      setCategoriaId("");
+      onSuccess();
+    } catch (error) {
+      if (error.response?.status === 403) {
+        setMensajeExito("No tienes permisos para cargar documentos.");
+        setTipoMensaje("error");
         setTitulo("");
         setContenido("");
         setArchivo(null);
         setCategoriaId("");
-        onSuccess(); // Llama al refresco después de crear exitosamente
-        // Opcional: refrescar lista
       } else {
-        throw new Error("Error al subir el documento");
+        setMensajeExito("❌ Error al cargar el documento.");
+        setTipoMensaje("error");
       }
-    } catch (error) {
-      alert("❌ Error: " + error.message);
+      setShowModal(false);
     }
   };
 
@@ -184,7 +191,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
           className={`fixed bottom-5 right-5 px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
       ${tipoMensaje === "exito" ? "bg-green-500" : ""}
       ${tipoMensaje === "info" ? "bg-blue-500" : ""}
-      ${tipoMensaje === "error" ? "bg-red-500" : ""}text-white`}
+      ${tipoMensaje === "error" ? "bg-red-500" : ""} text-white`}
         >
           {mensajeExito}
         </div>
