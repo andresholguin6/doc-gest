@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { User, Lock } from "lucide-react";
+import { User, Lock, Loader2 } from "lucide-react";
 
 export const Login = () => {
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showSlowMessage, setShowSlowMessage] = useState(false);
+  const timerRef = useRef(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -15,6 +18,15 @@ export const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
+    setShowSlowMessage(false);
+
+    // Si tarda más de 5 segundos, mostramos el mensaje
+    timerRef.current = setTimeout(() => {
+      setShowSlowMessage(true);
+    }, 5000);
+
+    // await new Promise(resolve => setTimeout(resolve, 8000));
 
     try {
       const response = await axios.post(
@@ -23,17 +35,22 @@ export const Login = () => {
       );
 
       const { access_token, refresh_token } = response.data;
-
-      // Guardamos los tokens en localStorage
       localStorage.setItem("access_token", access_token);
       localStorage.setItem("refresh_token", refresh_token);
-
-      // Redirigimos al home
       navigate("/home");
     } catch (err) {
       setError("Usuario o contraseña incorrectos.");
+    } finally {
+      clearTimeout(timerRef.current);
+      setLoading(false);
+      setShowSlowMessage(false);
     }
   };
+
+  // Limpiamos el timer si el componente se desmonta
+  useEffect(() => {
+    return () => clearTimeout(timerRef.current);
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -51,6 +68,17 @@ export const Login = () => {
         </div>
 
         {error && <div className="text-red-500 mb-2">{error}</div>}
+
+        {showSlowMessage && (
+          <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 text-blue-700 text-sm rounded-lg px-4 py-3 mb-4">
+            <Loader2 className="w-4 h-4 mt-0.5 animate-spin shrink-0" />
+            <span>
+              El servidor está iniciando, esto puede tardar hasta 60 segundos.
+              Por favor espera...
+            </span>
+          </div>
+        )}
+
         <label className="block text-sm font-medium text-gray-700">
           Usuario
         </label>
@@ -65,6 +93,7 @@ export const Login = () => {
             required
           />
         </div>
+
         <label className="block text-sm font-medium text-gray-700">
           Contraseña
         </label>
@@ -88,9 +117,17 @@ export const Login = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+          disabled={loading}
+          className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          Entrar
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Iniciando sesión...
+            </>
+          ) : (
+            "Entrar"
+          )}
         </button>
       </form>
     </div>
