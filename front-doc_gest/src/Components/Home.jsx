@@ -78,7 +78,7 @@ export const Home = () => {
         setSidebarOpen={setSidebarOpen}
       />
 
-      <main className="flex-1 bg-gray-100 overflow-auto">
+      <main className="flex-1 bg-slate-50 overflow-auto">
         {/* Botón hamburguesa visible solo en móvil */}
         <div className="md:hidden p-4 bg-white flex items-center gap-3 shadow-sm">
           <button

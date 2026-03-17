@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { User, Lock, Loader2 } from "lucide-react";
+import logo from "../../../assets/logo.png";
 
 export const Login = () => {
   const [form, setForm] = useState({ username: "", password: "" });
@@ -53,12 +54,19 @@ export const Login = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div
+      className="min-h-screen flex items-center justify-center"
+      style={{
+        background:
+          "linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%)",
+      }}
+    >
       <form
         onSubmit={handleLogin}
         className="bg-white p-6 rounded-xl shadow-md w-full max-w-md mx-4 sm:mx-auto"
       >
         <div className="mt-6 mb-6 text-center">
+          <img src={logo} alt="DocGest" className="w-100 mx-auto mb-6" />
           <h2 className="text-3xl font-bold text-gray-800">
             Bienvenido de nuevo
           </h2>

@@ -1,4 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { Home, FileText, Users, LogOut } from "lucide-react";
+import logo from "../../../assets/logo.png";
 
 export const SideBar = ({
   setActiveTab,
@@ -24,52 +26,76 @@ export const SideBar = ({
         `}
     >
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-gray-800">DocGest</h2>
+        <img src={logo} alt="DocGest" className="w-90 mx-auto mb-6" />
+
         {/* Botón cerrar sidebar en móvil */}
-        <button
+        {/* <button
           onClick={() => setSidebarOpen(false)}
           className="md:hidden text-gray-500 text-xl"
         >
           ✕
-        </button>
+        </button> */}
       </div>
+
+      {/* Info del usuario */}
+      {user && (
+        <div className="flex items-center gap-3 px-3 py-3 mb-6 bg-blue-50 rounded-lg">
+          <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-sm shrink-0">
+            {user.sub?.charAt(0).toUpperCase()}
+          </div>
+          <div className="overflow-hidden">
+            <p className="text-sm font-medium text-gray-800 truncate">
+              {user.sub}
+            </p>
+            <p className="text-xs text-gray-400 capitalize">{user.rol}</p>
+          </div>
+        </div>
+      )}
+      {/* Navegación */}
       <nav>
         <ul>
-          <li className="mb-4">
-            <a href="#" className="hover:text-blue-300">
-              Inicio
+          <li className="mb-2">
+            <a
+              href="#"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-500 transition-colors"
+            >
+              <Home size={18} />
+              <span>Inicio</span>
             </a>
           </li>
-          <li className="mb-4">
+          <li className="mb-2">
             <button
               onClick={() => {
                 setActiveTab("documentos");
                 setSidebarOpen(false);
               }}
-              className="hover:text-blue-300 text-left w-full cursor-pointer"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-500 transition-colors w-full text-left cursor-pointer"
             >
-              Documentos
+              <FileText size={18} />
+              <span>Documentos</span>
             </button>
           </li>
-          {user?.rol === "superadmin" && (
-            <li className="mb-4">
+          {(user?.rol === "superadmin" || user?.rol === "admin") && (
+            <li className="mb-2">
               <button
                 onClick={() => {
                   setActiveTab("adminUsuarios");
                   setSidebarOpen(false);
                 }}
-                className="hover:text-blue-300 text-left w-full cursor-pointer"
+                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-500 transition-colors w-full text-left cursor-pointer"
               >
-                Admin usuarios
+                <Users size={18} />
+                <span>Admin usuarios</span>
               </button>
             </li>
           )}
-          <li className="mb-4">
+          <li className="mb-2">
             <button
               onClick={handleLogout}
-              className="hover:text-blue-300 text-left w-full cursor-pointer"
+              className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-50 hover:text-red-500 transition-colors w-full text-left cursor-pointer"
             >
-              Logout
+              <LogOut size={18} />
+              <span>Logout</span>
             </button>
           </li>
         </ul>
