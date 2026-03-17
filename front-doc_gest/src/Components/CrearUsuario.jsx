@@ -9,6 +9,7 @@ export const CrearUsuario = ({ onSuccess }) => {
   const [mensajeExito, setMensajeExito] = useState("");
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [errorPassword, setErrorPassword] = useState("");
+  const [tipoMensaje, setTipoMensaje] = useState("exito");
 
   const validarPassword = (pass) => {
     if (pass.length < 8)
@@ -32,7 +33,11 @@ export const CrearUsuario = ({ onSuccess }) => {
     try {
       await axiosInstance.post("/usuarios/", { username, password, rol });
       setMensajeExito("¡Usuario creado con éxito!");
+      setTipoMensaje("exito");
       setMostrarFormulario(false);
+      setUsername("");
+      setPassword("");
+      setRol("");
       onSuccess(); // 👈 dispara el refresco
     } catch (error) {
       console.error("Error al crear usuario", error);
@@ -140,7 +145,12 @@ export const CrearUsuario = ({ onSuccess }) => {
 
       {/* Mensaje de éxito */}
       {mensajeExito && (
-        <div className="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300">
+        <div
+          className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
+      ${tipoMensaje === "exito" ? "bg-green-500" : ""}
+      ${tipoMensaje === "info" ? "bg-blue-500" : ""}
+      ${tipoMensaje === "error" ? "bg-red-500" : ""} text-white`}
+        >
           {mensajeExito}
         </div>
       )}

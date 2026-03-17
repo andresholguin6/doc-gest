@@ -81,7 +81,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
       {/* Botón para abrir el modal */}
       <button
         onClick={() => setShowModal(true)}
-        className=" flex items-center gap-2 top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600"
+        className=" flex items-center gap-2 top-5 right-5 bg-blue-500 text-white px-4 py-2 rounded cursor-pointer hover:bg-blue-600 truncate"
       >
         <Upload size={20} />
         <span className="sm:hidden">Documento</span>
@@ -188,7 +188,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
       {/* Mensaje de éxito */}
       {mensajeExito && (
         <div
-          className={`fixed bottom-5 right-5 px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
+        className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
       ${tipoMensaje === "exito" ? "bg-green-500" : ""}
       ${tipoMensaje === "info" ? "bg-blue-500" : ""}
       ${tipoMensaje === "error" ? "bg-red-500" : ""} text-white`}

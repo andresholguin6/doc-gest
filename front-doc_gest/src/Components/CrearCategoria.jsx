@@ -43,7 +43,7 @@ export const CrearCategoria = ({ onSuccess }) => {
   return (
     <div className="mb-6">
       <button
-        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 cursor-pointer"
+        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 cursor-pointer truncate"
         onClick={() => setMostrarModal(true)}
       >
         <PlusCircle size={20} />
@@ -94,7 +94,7 @@ export const CrearCategoria = ({ onSuccess }) => {
       {/* Mensaje de confirmacion de que se creó la categoría */}
       {mensaje && (
         <div
-          className={`fixed bottom-5 right-5 px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
+        className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
         ${tipoMensaje === "exito" ? "bg-green-500" : ""}
         ${tipoMensaje === "info" ? "bg-blue-500" : ""}
         ${tipoMensaje === "error" ? "bg-red-500" : ""} text-white`}
