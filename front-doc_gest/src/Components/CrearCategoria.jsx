@@ -8,9 +8,16 @@ export const CrearCategoria = ({ onSuccess }) => {
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("exito");
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [errorNombre, setErrorNombre] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!nombre.trim()) {
+      setErrorNombre("El nombre es obligatorio");
+      return;
+    }
+
     try {
       await axiosInstance.post("/categorias/", { nombre });
       setMensaje("Categoría creada con éxito!");
@@ -43,7 +50,7 @@ export const CrearCategoria = ({ onSuccess }) => {
   return (
     <div className="mb-6">
       <button
-        className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 cursor-pointer truncate"
+        className="flex items-center gap-2 px-4 py-2 border-1 rounded border-blue-800 text-blue-800 hover:bg-blue-800 hover:text-white cursor-pointer truncate"
         onClick={() => setMostrarModal(true)}
       >
         <PlusCircle size={20} />
@@ -56,26 +63,41 @@ export const CrearCategoria = ({ onSuccess }) => {
           <div className="absolute inset-0 bg-gray-600 opacity-90"></div>
           <div className="bg-white rounded-xl shadow-xl p-6 w-96 relative">
             <button
-              onClick={() => setMostrarModal(false)}
+              onClick={() => {
+                setMostrarModal(false);
+                setErrorNombre("");
+              }}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
             >
               <X />
             </button>
             <h2 className="text-xl font-bold mb-4">Crear Categoría</h2>
 
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} className="flex flex-col">
               <input
                 type="text"
                 placeholder="Nombre de la categoría"
                 value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2"
-                required
+                onChange={(e) => {
+                  setNombre(e.target.value);
+                  setErrorNombre(
+                    e.target.value.trim() ? "" : "El nombre es obligatorio"
+                  );
+                }}
+                className={`border border-gray-300 rounded-md px-3 py-2 ${
+                  errorNombre ? "border-red-500" : ""
+                }`}
               />
-              <div className="flex justify-end gap-2">
+              {errorNombre && (
+                <p className="text-red-500 text-sm">{errorNombre}</p>
+              )}
+              <div className="flex justify-end gap-2 mt-4">
                 <button
                   type="button"
-                  onClick={() => setMostrarModal(false)}
+                  onClick={() => {
+                    setMostrarModal(false);
+                    setErrorNombre("")
+                  }}
                   className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
                 >
                   Cancelar
@@ -94,7 +116,7 @@ export const CrearCategoria = ({ onSuccess }) => {
       {/* Mensaje de confirmacion de que se creó la categoría */}
       {mensaje && (
         <div
-        className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
+          className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
         ${tipoMensaje === "exito" ? "bg-green-500" : ""}
         ${tipoMensaje === "info" ? "bg-blue-500" : ""}
         ${tipoMensaje === "error" ? "bg-red-500" : ""} text-white`}

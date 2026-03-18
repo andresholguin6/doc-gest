@@ -54,7 +54,7 @@ export const SideBar = ({
       {/* Navegación */}
       <nav>
         <ul>
-          <li className="mb-2">
+          {/* <li className="mb-2">
             <a
               href="#"
               className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-blue-50 hover:text-blue-500 transition-colors"
@@ -62,7 +62,7 @@ export const SideBar = ({
               <Home size={18} />
               <span>Inicio</span>
             </a>
-          </li>
+          </li> */}
           <li className="mb-2">
             <button
               onClick={() => {

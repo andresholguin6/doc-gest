@@ -10,6 +10,7 @@ export const CrearUsuario = ({ onSuccess }) => {
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [errorPassword, setErrorPassword] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("exito");
+  const [errorUsername, setErrorUsername] = useState("");
 
   const validarPassword = (pass) => {
     if (pass.length < 8)
@@ -21,14 +22,22 @@ export const CrearUsuario = ({ onSuccess }) => {
     return "";
   };
 
+  const validarEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(email)) return "Ingresa un correo electrónico válido";
+    return "";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const error = validarPassword(password);
-    if (error) {
-      setErrorPassword(error);
-      return;
-    }
+    const emailError = validarEmail(username);
+    const passError = validarPassword(password);
+
+    setErrorUsername(emailError);
+    setErrorPassword(passError);
+
+    if (emailError || passError) return;
 
     try {
       await axiosInstance.post("/usuarios/", { username, password, rol });
@@ -86,9 +95,14 @@ export const CrearUsuario = ({ onSuccess }) => {
                   type="text"
                   className="w-full border p-2 rounded"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
+                  onChange={(e) => {
+                    setUsername(e.target.value);
+                    setErrorUsername(validarEmail(e.target.value));
+                  }}
                 />
+                {errorUsername && (
+                  <p className="text-red-500 text-sm mt-1">{errorUsername}</p>
+                )}
               </div>
 
               <div>
@@ -126,14 +140,14 @@ export const CrearUsuario = ({ onSuccess }) => {
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
-                  className="bg-gray-400 text-white px-4 py-2 rounded"
+                  className="cursor-pointer bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded"
                   onClick={() => setMostrarFormulario(false)}
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="bg-green-600 text-white px-4 py-2 rounded"
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded cursor-pointer"
                 >
                   Crear
                 </button>

@@ -3,12 +3,15 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { User, Lock, Loader2 } from "lucide-react";
 import logo from "../../../assets/logo.png";
+import LoginHome from "../../../assets/LoginHome.png";
 
 export const Login = () => {
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSlowMessage, setShowSlowMessage] = useState(false);
+  const [errorUsername, setErrorUsername] = useState("");
+  const [errorPassword, setErrorPassword] = useState("");
   const timerRef = useRef(null);
   const navigate = useNavigate();
 
@@ -18,6 +21,17 @@ export const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    // Validación de campos
+    let valido = true;
+    if (!form.username.trim()) {
+      setErrorUsername("El correo es obligatorio");
+      valido = false;
+    }
+    if (!form.password.trim()) {
+      setErrorPassword("La contraseña es obligatoria");
+      valido = false;
+    }
+    if (!valido) return;
     setError("");
     setLoading(true);
     setShowSlowMessage(false);
@@ -55,89 +69,127 @@ export const Login = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center"
-      style={{
-        background:
-          "linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%)",
-      }}
+      className="min-h-screen flex bg-blue-100"
+      // style={{
+      //   background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+      // }}
     >
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-6 rounded-xl shadow-md w-full max-w-md mx-4 sm:mx-auto"
-      >
-        <div className="mt-6 mb-6 text-center">
-          <img src={logo} alt="DocGest" className="w-100 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold text-gray-800">
-            Bienvenido de nuevo
-          </h2>
-          <p className="text-sm text-gray-500 mt-1">
-            Por favor, inicia sesión con tu cuenta
-          </p>
-        </div>
+      {/* Panel izquierdo — solo visible en desktop */}
+      <div className="hidden md:flex w-1/2 lg:w-3/5 flex-col items-center justify-center px-8 text-gray-600">
+        <h2 className="text-2xl xl:text-5xl font-bold mb-4">Gestiona tus documentos</h2>
+        <p className="text-blue-500 text-lg mb-8 text-center">
+          Organiza, visualiza y comparte documentos PDF de forma segura y
+          eficiente.
+        </p>
+        <img
+          src={LoginHome}
+          alt="Dashboard"
+          className="rounded-xl shadow-2xl w-full max-w-2xl opacity-90"
+        />
+      </div>
 
-        {error && <div className="text-red-500 mb-2">{error}</div>}
+      {/* Panel derecho — formulario */}
 
-        {showSlowMessage && (
-          <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 text-blue-700 text-sm rounded-lg px-4 py-3 mb-4">
-            <Loader2 className="w-4 h-4 mt-0.5 animate-spin shrink-0" />
-            <span>
-              El servidor está iniciando, esto puede tardar hasta 60 segundos.
-              Por favor espera...
-            </span>
-          </div>
-        )}
-
-        <label className="block text-sm font-medium text-gray-700">
-          Usuario
-        </label>
-        <div className="flex relative items-center mb-4 group">
-          <User className="absolute left-3 text-gray-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
-          <input
-            type="text"
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            className="w-full px-9 py-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        <label className="block text-sm font-medium text-gray-700">
-          Contraseña
-        </label>
-        <div className="mb-6 flex relative items-center group">
-          <Lock className="absolute left-3 text-gray-400 w-4 h-4 group-focus-within:text-blue-500 transition-colors" />
-          <input
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            className="w-full px-9 py-2 mt-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-
-        <div className="flex justify-between items-center text-sm mb-6">
-          <a href="#" className="text-blue-600 hover:underline">
-            ¿Olvidaste tu contraseña?
-          </a>
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+      <div className="w-full md:w-1/2 lg:w-2/5 min-h-screen flex items-center justify-center bg-blue-100 px-8">
+        <form
+          onSubmit={handleLogin}
+          className="bg-white p-6 rounded-xl shadow-md w-full max-w-md mx-4 sm:mx-auto"
         >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              Iniciando sesión...
-            </>
-          ) : (
-            "Entrar"
+          <div className="mt-6 mb-6 text-center">
+            <img src={logo} alt="DocGest" className="w-100 mx-auto mb-6" />
+            <h2 className="text-3xl font-bold text-gray-800">
+              Inicio de sesión
+            </h2>
+            <p className="text-sm text-gray-500 mt-1">
+              Por favor, inicia sesión con tu cuenta
+            </p>
+          </div>
+
+          {error && <div className="text-red-500 mb-2">{error}</div>}
+
+          {showSlowMessage && (
+            <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 text-blue-700 text-sm rounded-lg px-4 py-3 mb-4">
+              <Loader2 className="w-4 h-4 mt-0.5 animate-spin shrink-0" />
+              <span>
+                El servidor está iniciando, esto puede tardar hasta 60 segundos.
+                Por favor espera...
+              </span>
+            </div>
           )}
-        </button>
-      </form>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Usuario
+            </label>
+            <div className="flex relative items-center group">
+              <User className="absolute left-3 text-gray-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
+              <input
+                type="text"
+                name="username"
+                value={form.username}
+                onChange={(e) => {
+                  handleChange(e);
+                  setErrorUsername(
+                    e.target.value.trim() ? "" : "El correo es obligatorio"
+                  );
+                }}
+                className={`w-full px-9 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errorUsername ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+            </div>
+            {errorUsername && (
+              <p className="text-red-500 text-sm mt-1">{errorUsername}</p>
+            )}
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700">
+              Contraseña
+            </label>
+            <div className="flex relative items-center group">
+              <Lock className="absolute left-3 text-gray-400 w-4 h-4 group-focus-within:text-blue-500 transition-colors" />
+              <input
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={(e) => {
+                  handleChange(e);
+                  setErrorPassword(
+                    e.target.value.trim() ? "" : "La contraseña es obligatoria"
+                  );
+                }}
+                className={`w-full px-9 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  errorPassword ? "border-red-500" : "border-gray-300"
+                }`}
+              />
+            </div>
+            {errorPassword && (
+              <p className="text-red-500 text-sm mt-1">{errorPassword}</p>
+            )}
+          </div>
+          <div className="flex justify-between items-center text-sm mb-6">
+            <a href="#" className="text-blue-600 hover:underline">
+              ¿Olvidaste tu contraseña?
+            </a>
+          </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                Iniciando sesión...
+              </>
+            ) : (
+              "Entrar"
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

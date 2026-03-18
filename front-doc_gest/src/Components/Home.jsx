@@ -38,7 +38,7 @@ export const Home = () => {
         return (
           <div className="p-6">
             <h1 className="text-2xl font-semibold mb-6">
-              Bienvenido a tu gestor documental
+            Bienvenido, <span className="text-blue-400 font-light text-lg">{user?.sub}</span>
             </h1>
             <div className="flex flex-col lg:flex-row lg:items-stretch justify-between gap-2 mb-4">
               <BarraBusqueda />

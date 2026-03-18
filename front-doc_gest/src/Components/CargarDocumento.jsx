@@ -14,6 +14,9 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
   const [categorias, setCategorias] = useState([]);
   const [mensajeExito, setMensajeExito] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("exito");
+  const [errorTitulo, setErrorTitulo] = useState("");
+  const [errorArchivo, setErrorArchivo] = useState("");
+  const [errorCategoria, setErrorCategoria] = useState("");
 
   useEffect(() => {
     const ObtenerCategorias = async () => {
@@ -29,6 +32,22 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
   }, [refreshKey]);
 
   const handleUpload = async () => {
+    let valido = true;
+
+    if (!titulo.trim()) {
+      setErrorTitulo("El título es obligatorio");
+      valido = false;
+    }
+    if (!categoriaId) {
+      setErrorCategoria("Selecciona una categoría");
+      valido = false;
+    }
+    if (!archivo) {
+      setErrorArchivo("Selecciona un archivo");
+      valido = false;
+    }
+    if (!valido) return;
+
     const formData = new FormData();
     formData.append("titulo", titulo);
     formData.append("contenido", contenido);
@@ -102,6 +121,9 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
                 setContenido("");
                 setCategoriaId("");
                 setArchivo(null);
+                setErrorArchivo("");
+                setErrorCategoria("");
+                setErrorTitulo("");
               }}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
             >
@@ -109,29 +131,53 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
             </button>
 
             <h2 className="text-xl font-bold mb-4">Nuevo Documento</h2>
-            <div className="space-y-4">
+            <div className="">
               <input
                 type="text"
                 placeholder="Título"
                 value={titulo}
-                onChange={(e) => setTitulo(e.target.value)}
-                className="w-full border rounded px-3 py-2"
+                onChange={(e) => {
+                  setTitulo(e.target.value),
+                    setErrorTitulo(
+                      e.target.value.trim() ? "" : "El título es obligatorio"
+                    );
+                }}
+                className={`w-full border rounded px-3 py-2 ${
+                  errorTitulo ? "border-red-500" : ""
+                }`}
               />
+              {errorTitulo && (
+                <p className="text-red-500 text-sm mt-1">{errorTitulo}</p>
+              )}
               <textarea
                 placeholder="Contenido"
                 value={contenido}
                 onChange={(e) => setContenido(e.target.value)}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-3 py-2 mt-4"
               />
 
               <div>
-                <label className="block font-semibold mb-4">Categoría</label>
+                <label className="block font-semibold mb-4 mt-4 ">
+                  Categoría
+                </label>
                 <select
                   value={categoriaId}
-                  onChange={(e) => setCategoriaId(e.target.value)}
-                  className="w-full border rounded px-3 py-2"
+                  onChange={(e) => {
+                    setCategoriaId(e.target.value);
+                    setErrorCategoria(
+                      e.target.value ? "" : "Selecciona una categoría"
+                    );
+                  }}
+                  className={`w-full border rounded px-3 py-2 ${
+                    errorCategoria ? "border-red-500" : ""
+                  }`}
                   required
                 >
+                  {errorCategoria && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errorCategoria}
+                    </p>
+                  )}
                   <option value="">Selecciona una categoría</option>
                   {categorias.map((cat) => (
                     <option key={cat.id} value={cat.id}>
@@ -141,18 +187,23 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
                 </select>
               </div>
 
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="mb-4 mt-4">
+                {/* <label className="block text-sm font-medium text-gray-700 mb-2">
                   Seleccionar archivo
-                </label>
+                </label> */}
 
                 <div className="flex items-center space-x-4">
                   {/* Botón personalizado que dispara el input */}
-                  <label className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-700 transition duration-200 whitespace-nowrap">
+                  <label className="cursor-pointer text-white hover:bg-blue-400 px-4 py-2 rounded-md bg-blue-600 transition duration-200 whitespace-nowrap">
                     Elegir archivo
                     <input
                       type="file"
-                      onChange={(e) => setArchivo(e.target.files[0])}
+                      onChange={(e) => {
+                        setArchivo(e.target.files[0]);
+                        setErrorArchivo(
+                          e.target.files[0] ? "" : "Selecciona un archivo"
+                        );
+                      }}
                       className="hidden"
                     />
                   </label>
@@ -164,6 +215,9 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
                     </span>
                   )}
                 </div>
+                {errorArchivo && (
+                  <p className="text-red-500 text-sm mt-1">{errorArchivo}</p>
+                )}
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
@@ -176,7 +230,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
               />
               <button
                 onClick={handleUpload}
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+                className="bg-blue-800 text-white px-4 py-2 rounded hover:bg-blue-700"
               >
                 Cargar
               </button>
@@ -188,7 +242,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
       {/* Mensaje de éxito */}
       {mensajeExito && (
         <div
-        className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
+          className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
       ${tipoMensaje === "exito" ? "bg-green-500" : ""}
       ${tipoMensaje === "info" ? "bg-blue-500" : ""}
       ${tipoMensaje === "error" ? "bg-red-500" : ""} text-white`}

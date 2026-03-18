@@ -30,8 +30,8 @@ export const ListaUsuarios = ({ refreshKey }) => {
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
       <table className="w-full table-fixed text-center text-xs sm:text-sm">
-        <thead className="text-gray-600 border-b-gray-300">
-          <tr className="bg-gray-200">
+        <thead className="text-gray-600 border-b-blue-900">
+          <tr className="bg-blue-50">
             <th className="w-1/2 p-2">Nombre</th>
             <th className=" w-1/2 p-2">Rol</th>
           </tr>

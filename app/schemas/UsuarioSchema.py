@@ -1,9 +1,9 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, EmailStr
 from typing import List
 
 
 class UsuarioCreate(BaseModel):
-    username: str
+    username: EmailStr  # Valida que sea un email válido
     password: str
     rol: str = "usuario"  # valor por defecto
 
