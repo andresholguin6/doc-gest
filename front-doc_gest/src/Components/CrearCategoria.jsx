@@ -28,12 +28,15 @@ export const CrearCategoria = ({ onSuccess }) => {
       if (error.response?.status === 403) {
         setMensaje("No tienes permisos para crear categorías.");
         setTipoMensaje("error");
-        setNombre("");
+      } else if (error.response?.status === 400) {
+        setMensaje(error.response.data.detail);
+        setTipoMensaje("error");
       } else {
-        setMensaje("❌ Error al cargar el documento.");
+        setMensaje("Error al crear la categoría.");
         setTipoMensaje("error");
       }
       setMostrarModal(false);
+      setNombre("");
     }
   };
 
@@ -96,7 +99,7 @@ export const CrearCategoria = ({ onSuccess }) => {
                   type="button"
                   onClick={() => {
                     setMostrarModal(false);
-                    setErrorNombre("")
+                    setErrorNombre("");
                   }}
                   className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
                 >
@@ -119,7 +122,7 @@ export const CrearCategoria = ({ onSuccess }) => {
           className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
         ${tipoMensaje === "exito" ? "bg-green-500" : ""}
         ${tipoMensaje === "info" ? "bg-blue-500" : ""}
-        ${tipoMensaje === "error" ? "bg-red-500" : ""} text-white`}
+        ${tipoMensaje === "error" ? "bg-red-50 border border-red-200" : ""} text-red-600`}
         >
           {mensaje}
         </div>

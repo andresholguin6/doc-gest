@@ -73,15 +73,21 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
       if (error.response?.status === 403) {
         setMensajeExito("No tienes permisos para cargar documentos.");
         setTipoMensaje("error");
-        setTitulo("");
-        setContenido("");
-        setArchivo(null);
-        setCategoriaId("");
+      } else if (error.response?.status === 400) {
+        setMensajeExito(error.response.data.detail);
+        setTipoMensaje("error");
+      } else if (error.response?.status === 404) {
+        setMensajeExito("La categoría seleccionada no existe.");
+        setTipoMensaje("error");
       } else {
-        setMensajeExito("❌ Error al cargar el documento.");
+        setMensajeExito("Error del servidor, intenta de nuevo.");
         setTipoMensaje("error");
       }
       setShowModal(false);
+      setTitulo("");
+      setContenido("");
+      setArchivo(null);
+      setCategoriaId("");
     }
   };
 
@@ -171,13 +177,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
                   className={`w-full border rounded px-3 py-2 ${
                     errorCategoria ? "border-red-500" : ""
                   }`}
-                  required
                 >
-                  {errorCategoria && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {errorCategoria}
-                    </p>
-                  )}
                   <option value="">Selecciona una categoría</option>
                   {categorias.map((cat) => (
                     <option key={cat.id} value={cat.id}>
@@ -185,6 +185,9 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
                     </option>
                   ))}
                 </select>
+                {errorCategoria && (
+                  <p className="text-red-500 text-sm mt-1">{errorCategoria}</p>
+                )}
               </div>
 
               <div className="mb-4 mt-4">
@@ -198,6 +201,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
                     Elegir archivo
                     <input
                       type="file"
+                      accept=".pdf"
                       onChange={(e) => {
                         setArchivo(e.target.files[0]);
                         setErrorArchivo(
@@ -221,16 +225,10 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
               </div>
             </div>
             <div className="mt-6 flex justify-end gap-2">
-              <ScanButton
-                setArchivo={setArchivo}
-                onSuccess={(msg, tipo) => {
-                  setMensajeExito(msg);
-                  setTipoMensaje(tipo);
-                }}
-              />
+              <ScanButton />
               <button
                 onClick={handleUpload}
-                className="bg-blue-800 text-white px-4 py-2 rounded hover:bg-blue-700"
+                className="bg-blue-800 text-white px-4 py-2 cursor-pointer rounded hover:bg-blue-700"
               >
                 Cargar
               </button>
@@ -245,7 +243,7 @@ export const CargarDocumento = ({ onSuccess, refreshKey }) => {
           className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
       ${tipoMensaje === "exito" ? "bg-green-500" : ""}
       ${tipoMensaje === "info" ? "bg-blue-500" : ""}
-      ${tipoMensaje === "error" ? "bg-red-500" : ""} text-white`}
+      ${tipoMensaje === "error" ? "bg-red-50 border border-red-200" : ""} text-red-600`}
         >
           {mensajeExito}
         </div>

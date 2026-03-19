@@ -5,10 +5,11 @@ import { PlusCircle, X } from "lucide-react";
 export const CrearUsuario = ({ onSuccess }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [rol, setRol] = useState("usuario");
+  const [rol, setRol] = useState("");
   const [mensajeExito, setMensajeExito] = useState("");
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [errorPassword, setErrorPassword] = useState("");
+  const [errorRol, setErrorRol] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("exito");
   const [errorUsername, setErrorUsername] = useState("");
 
@@ -33,11 +34,13 @@ export const CrearUsuario = ({ onSuccess }) => {
 
     const emailError = validarEmail(username);
     const passError = validarPassword(password);
+    const rolError = !rol ? "Selecciona un rol" : "";
 
     setErrorUsername(emailError);
     setErrorPassword(passError);
+    setErrorRol(rolError);
 
-    if (emailError || passError) return;
+    if (emailError || passError || rolError) return;
 
     try {
       await axiosInstance.post("/usuarios/", { username, password, rol });
@@ -49,8 +52,23 @@ export const CrearUsuario = ({ onSuccess }) => {
       setRol("");
       onSuccess(); // 👈 dispara el refresco
     } catch (error) {
-      console.error("Error al crear usuario", error);
-      setMensajeExito("Hubo un error al crear el usuario");
+      if (error.response?.status === 403) {
+        setMensajeExito("No tienes permisos para crear usuarios.");
+        setTipoMensaje("error");
+      } else if (error.response?.status === 400) {
+        setMensajeExito(error.response.data.detail);
+        setTipoMensaje("error");
+      } else if (error.response?.status === 422) {
+        setMensajeExito("Datos inválidos, revisa el formulario.");
+        setTipoMensaje("error");
+      } else {
+        setMensajeExito("Error del servidor, intenta de nuevo.");
+        setTipoMensaje("error");
+      }
+      setMostrarFormulario(false);
+      setUsername("");
+      setPassword("");
+      setRol("");
     }
   };
 
@@ -82,7 +100,15 @@ export const CrearUsuario = ({ onSuccess }) => {
           <div className="absolute inset-0 bg-gray-600 opacity-90"></div>
           <div className="bg-white rounded-xl shadow-xl p-6 w-96 relative">
             <button
-              onClick={() => setMostrarFormulario(false)}
+              onClick={() => {
+                setMostrarFormulario(false);
+                setErrorUsername("");
+                setErrorPassword("");
+                setErrorRol("");
+                setUsername("");
+                setPassword("");
+                setRol("");
+              }}
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
             >
               <X />
@@ -90,58 +116,88 @@ export const CrearUsuario = ({ onSuccess }) => {
             <h3 className="text-xl font-bold mb-4">Crear nuevo usuario</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block mb-1">Username</label>
+                {/* <label className="block mb-1">Username</label> */}
                 <input
                   type="text"
-                  className="w-full border p-2 rounded"
+                  placeholder="Usuario"
                   value={username}
                   onChange={(e) => {
                     setUsername(e.target.value);
                     setErrorUsername(validarEmail(e.target.value));
                   }}
+                  className={`w-full border rounded px-3 py-2 ${
+                    errorUsername ? "border-red-500" : ""
+                  }`}
                 />
-                {errorUsername && (
-                  <p className="text-red-500 text-sm mt-1">{errorUsername}</p>
-                )}
+                <p
+                  className={`text-xs mt-1 ${
+                    errorUsername ? "text-red-500" : "text-gray-400"
+                  }`}
+                >
+                  {errorUsername || "Ingresa un correo electrónico válido"}
+                </p>
               </div>
 
               <div>
-                <label className="block mb-1">Contraseña</label>
+                {/* <label className="block mb-1">Contraseña</label> */}
                 <input
                   type="password"
-                  className="w-full border p-2 rounded"
+                  placeholder="Contraseña"
                   value={password}
                   onChange={(e) => {
                     setPassword(e.target.value);
                     setErrorPassword(validarPassword(e.target.value));
                   }}
-                  required
+                  className={`w-full border rounded px-3 py-2 ${
+                    errorPassword ? "border-red-500" : ""
+                  }`}
                 />
-                {errorPassword && (
-                  <p className="text-red-500 text-sm mt-1">{errorPassword}</p>
-                )}
-                <p className="text-gray-400 text-xs mt-1">
-                  Mínimo 8 caracteres, una mayúscula y un número
+                <p
+                  className={`text-xs mt-1 ${
+                    errorPassword ? "text-red-500" : "text-gray-400"
+                  }`}
+                >
+                  {errorPassword ||
+                    "Mínimo 8 caracteres, una mayúscula y un número"}
                 </p>
               </div>
 
               <div>
-                <label className="block mb-1">Rol</label>
+                {/* <label className="block mb-1">Rol</label> */}
                 <select
-                  className="w-full border p-2 rounded"
                   value={rol}
-                  onChange={(e) => setRol(e.target.value)}
+                  onChange={(e) => {
+                    setRol(e.target.value);
+                    setErrorRol(e.target.value ? "" : "Selecciona un rol");
+                  }}
+                  className={`w-full border cursor-pointer rounded px-3 py-2 ${
+                    errorRol ? "border-red-500" : ""
+                  }`}
                 >
+                  <option value="" disabled>
+                    Selecciona un rol
+                  </option>
                   <option value="usuario">Usuario</option>
                   <option value="superadmin">Superadmin</option>
                 </select>
+                {errorRol && (
+                  <p className="text-red-500 text-xs mt-1">{errorRol}</p>
+                )}
               </div>
 
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   className="cursor-pointer bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded"
-                  onClick={() => setMostrarFormulario(false)}
+                  onClick={() => {
+                    setMostrarFormulario(false);
+                    setErrorUsername("");
+                    setErrorPassword("");
+                    setErrorRol("");
+                    setRol("");
+                    setUsername("");
+                    setPassword("");
+                  }}
                 >
                   Cancelar
                 </button>
@@ -163,7 +219,7 @@ export const CrearUsuario = ({ onSuccess }) => {
           className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
       ${tipoMensaje === "exito" ? "bg-green-500" : ""}
       ${tipoMensaje === "info" ? "bg-blue-500" : ""}
-      ${tipoMensaje === "error" ? "bg-red-500" : ""} text-white`}
+      ${tipoMensaje === "error" ? "bg-red-50 border border-red-200" : ""} text-red-600`}
         >
           {mensajeExito}
         </div>

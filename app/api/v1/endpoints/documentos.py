@@ -44,6 +44,10 @@ def crear_documento_con_archivo(
     # Solo roles con permiso "crear" pueden subir documentos
     verificar_permiso(user.rol, "crear")
 
+    # Validación de formato antes de cualquier operación
+    if archivo.content_type != "application/pdf":
+        raise HTTPException(status_code=400, detail="Solo se permiten archivos PDF")
+
     # Verificar que la categoría exista
     categoria = db.query(Categoria).filter(Categoria.id == categoria_id).first()
     if not categoria:
@@ -93,7 +97,7 @@ def crear_documento_con_archivo(
 def obtener_documentos(
     request: Request,
     db: Session = Depends(get_db),
-    user: Usuario = Depends(get_current_user) # ← Usuario autenticado
+    user: Usuario = Depends(get_current_user),  # ← Usuario autenticado
 ):
     try:
         documentos = db.query(Documento).all()

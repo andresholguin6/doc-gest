@@ -10,6 +10,7 @@ import { getUserFromToken } from "../utils/auth";
 export const Categorias = ({ refreshKey }) => {
   const [categorias, setCategorias] = useState([]);
   const [mostrarDocs, setMostrarDocs] = useState(false);
+  const [errorCarga, setErrorCarga] = useState("");
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
   const [documentoSeleccionado, setDocumentoSeleccionado] = useState(null);
 
@@ -25,7 +26,15 @@ export const Categorias = ({ refreshKey }) => {
           if (actualizada) setCategoriaSeleccionada(actualizada);
         }
       })
-      .catch((err) => console.error("Error cargando categorías:", err));
+      .catch((err) => {
+        if (!err.response) {
+          setErrorCarga(
+            "No se pudo conectar con el servidor. Intenta de nuevo más tarde."
+          );
+        } else {
+          setErrorCarga("Error al cargar las categorías.");
+        }
+      });
   }, [refreshKey]); // Se vuelve a ejecutar cada vez que refreshKey cambia
 
   const documentos = (categoria) => {
@@ -40,6 +49,11 @@ export const Categorias = ({ refreshKey }) => {
 
   return (
     <>
+      {errorCarga && (
+        <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg px-4 py-3 mt-4">
+          {errorCarga}
+        </div>
+      )}
       <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {categorias.map((cat) => (
           <React.Fragment key={cat.id}>

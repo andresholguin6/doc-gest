@@ -12,6 +12,7 @@ export const Login = () => {
   const [showSlowMessage, setShowSlowMessage] = useState(false);
   const [errorUsername, setErrorUsername] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
+  const [tipoMensaje, setTipoMensaje] = useState("");
   const timerRef = useRef(null);
   const navigate = useNavigate();
 
@@ -41,8 +42,6 @@ export const Login = () => {
       setShowSlowMessage(true);
     }, 5000);
 
-    // await new Promise(resolve => setTimeout(resolve, 8000));
-
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/autenticacion/login`,
@@ -54,13 +53,32 @@ export const Login = () => {
       localStorage.setItem("refresh_token", refresh_token);
       navigate("/home");
     } catch (err) {
-      setError("Usuario o contraseña incorrectos.");
+      if (err.response?.status === 401) {
+        setError("Usuario o contraseña incorrectos.");
+        setTipoMensaje("error");
+      } else if (err.response?.status === 422) {
+        setError("Ingresa un correo y contraseña válidos.");
+        setTipoMensaje("error");
+      } else {
+        setError("Error del servidor, intenta de nuevo.");
+        setTipoMensaje("error");
+      }
     } finally {
       clearTimeout(timerRef.current);
       setLoading(false);
       setShowSlowMessage(false);
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError("");
+      }, 3000); // Desaparece en 3 segundos
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   // Limpiamos el timer si el componente se desmonta
   useEffect(() => {
@@ -76,7 +94,9 @@ export const Login = () => {
     >
       {/* Panel izquierdo — solo visible en desktop */}
       <div className="hidden md:flex w-1/2 lg:w-3/5 flex-col items-center justify-center px-8 text-gray-600">
-        <h2 className="text-2xl xl:text-5xl font-bold mb-4">Gestiona tus documentos</h2>
+        <h2 className="text-2xl xl:text-5xl font-bold mb-4">
+          Gestiona tus documentos
+        </h2>
         <p className="text-blue-500 text-lg mb-8 text-center">
           Organiza, visualiza y comparte documentos PDF de forma segura y
           eficiente.
@@ -95,8 +115,8 @@ export const Login = () => {
           onSubmit={handleLogin}
           className="bg-white p-6 rounded-xl shadow-md w-full max-w-md mx-4 sm:mx-auto"
         >
-          <div className="mt-6 mb-6 text-center">
-            <img src={logo} alt="DocGest" className="w-100 mx-auto mb-6" />
+          <div className=" mb-6 text-center">
+            <img src={logo} alt="DocGest" className="w-100 mx-auto mb-4" />
             <h2 className="text-3xl font-bold text-gray-800">
               Inicio de sesión
             </h2>
@@ -105,7 +125,7 @@ export const Login = () => {
             </p>
           </div>
 
-          {error && <div className="text-red-500 mb-2">{error}</div>}
+          {/* {error && <div className="text-red-500 mb-2">{error}</div>} */}
 
           {showSlowMessage && (
             <div className="flex items-start gap-2 bg-blue-50 border border-blue-200 text-blue-700 text-sm rounded-lg px-4 py-3 mb-4">
@@ -177,7 +197,7 @@ export const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center mb-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
@@ -190,6 +210,18 @@ export const Login = () => {
           </button>
         </form>
       </div>
+
+      {/* Mensaje de eror */}
+      {error && (
+        <div
+          className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
+      ${tipoMensaje === "exito" ? "bg-green-500" : ""}
+      ${tipoMensaje === "info" ? "bg-blue-500" : ""}
+      ${tipoMensaje === "error" ? "bg-red-50 border border-red-200" : ""} text-red-600`}
+        >
+          {error}
+        </div>
+      )}
     </div>
   );
 };
