@@ -1,11 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.db.database import get_db
+from app.auth import hash_password
 from app.models.UsuarioModel import Usuario
 from app.schemas.UsuarioSchema import (
     UsuarioLogin,
     LoginResponse,
-    Token
+    Token,
+    UsuarioCreate,
+    UsuarioResponse,
 )
 from app.auth import (
     crear_token,
@@ -71,3 +74,32 @@ def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
     nuevo_access_token = crear_token({"sub": username, "rol": rol})
 
     return Token(access_token=nuevo_access_token, token_type="bearer")
+
+#Endpoint para crear, registrar usuario en la app.
+@router.post(
+    "/registro", response_model=UsuarioResponse, status_code=status.HTTP_201_CREATED
+)
+def registro(usuario: UsuarioCreate, db: Session = Depends(get_db)):
+    # Verificar que no exista
+    user_existente = (
+        db.query(Usuario).filter(Usuario.username == usuario.username).first()
+    )
+    if user_existente:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="El usuario ya existe."
+        )
+
+    # Hashear la contraseña
+    hashed_password = hash_password(usuario.password)
+
+    # Crear usuario — el rol viene del request pero solo permite usuario o admin
+    rol = usuario.rol if usuario.rol in ["usuario", "superadmin"] else "usuario"
+
+    nuevo_usuario = Usuario(
+        username=usuario.username, hashed_password=hashed_password, rol=rol
+    )
+    db.add(nuevo_usuario)
+    db.commit()
+    db.refresh(nuevo_usuario)
+
+    return nuevo_usuario

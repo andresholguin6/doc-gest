@@ -13,7 +13,7 @@ export function VisorPdfRv({ fileUrl, onClose, user }) {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-90 flex justify-center items-center z-50">
-      <div className="relative bg-white w-11/12 h-5/6 rounded shadow-lg flex flex-col">
+      <div className="relative bg-white w-full h-full rounded shadow-lg flex flex-col">
         {/* Botón cerrar */}
         <button
           onClick={onClose}

@@ -138,12 +138,13 @@ export const Login = () => {
           )}
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+            {/* <label className="block text-sm font-medium text-gray-700">
               Usuario
-            </label>
+            </label> */}
             <div className="flex relative items-center group">
               <User className="absolute left-3 text-gray-400 w-5 h-5 group-focus-within:text-blue-500 transition-colors" />
               <input
+                placeholder="Usuario"
                 type="text"
                 name="username"
                 value={form.username}
@@ -164,12 +165,13 @@ export const Login = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700">
+            {/* <label className="block text-sm font-medium text-gray-700">
               Contraseña
-            </label>
+            </label> */}
             <div className="flex relative items-center group">
               <Lock className="absolute left-3 text-gray-400 w-4 h-4 group-focus-within:text-blue-500 transition-colors" />
               <input
+                placeholder="Contraseña"
                 type="password"
                 name="password"
                 value={form.password}
@@ -188,16 +190,24 @@ export const Login = () => {
               <p className="text-red-500 text-sm mt-1">{errorPassword}</p>
             )}
           </div>
-          <div className="flex justify-between items-center text-sm mb-6">
-            <a href="#" className="text-blue-600 hover:underline">
-              ¿Olvidaste tu contraseña?
-            </a>
+          <div className="flex-col justify-between items-center text-sm mb-6">
+            <p className="text-center text-sm text-gray-500">
+              ¿No tienes cuenta?{" "}
+              <a href="/register" className="text-blue-600 hover:underline">
+                Regístrate
+              </a>
+            </p>
+            <p className="text-center">
+              <a href="#" className="text-blue-600 hover:underline">
+                ¿Olvidaste tu contraseña?
+              </a>
+            </p>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center mb-4 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full flex items-center justify-center mb-4 bg-blue-600 text-white py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? (
               <>
@@ -217,7 +227,9 @@ export const Login = () => {
           className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
       ${tipoMensaje === "exito" ? "bg-green-500" : ""}
       ${tipoMensaje === "info" ? "bg-blue-500" : ""}
-      ${tipoMensaje === "error" ? "bg-red-50 border border-red-200" : ""} text-red-600`}
+      ${
+        tipoMensaje === "error" ? "bg-red-50 border border-red-200" : ""
+      } text-red-600`}
         >
           {error}
         </div>

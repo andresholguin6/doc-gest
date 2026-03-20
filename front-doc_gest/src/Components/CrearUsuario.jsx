@@ -174,7 +174,7 @@ export const CrearUsuario = ({ onSuccess }) => {
                     errorRol ? "border-red-500" : ""
                   }`}
                 >
-                  <option value="" disabled>
+                  <option value="" disabled hidden>
                     Selecciona un rol
                   </option>
                   <option value="usuario">Usuario</option>
@@ -219,7 +219,9 @@ export const CrearUsuario = ({ onSuccess }) => {
           className={`fixed bottom-5 left-1/2 -translate-x-1/2 sm:left-auto sm:right-5 sm:translate-x-0 w-max px-6 py-3 rounded-md shadow-lg z-50 transition-opacity duration-300
       ${tipoMensaje === "exito" ? "bg-green-500" : ""}
       ${tipoMensaje === "info" ? "bg-blue-500" : ""}
-      ${tipoMensaje === "error" ? "bg-red-50 border border-red-200" : ""} text-red-600`}
+      ${
+        tipoMensaje === "error" ? "bg-red-50 border border-red-200" : ""
+      } text-red-600`}
         >
           {mensajeExito}
         </div>
